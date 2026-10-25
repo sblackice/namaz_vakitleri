@@ -1,0 +1,51 @@
+// Uygulamayı telefon/emülatör olmadan, Robolectric ile bilgisayarda test eder.
+// Çalıştırma: ../../test.sh (gerekli ortam değişkenlerini o ayarlar)
+plugins { id 'java' }
+
+def repoRoot = file('../..')
+def androidJar = System.getenv('ANDROID_JAR')
+def shimJar = System.getenv('AXT_SHIM_JAR')
+def mavenRepo = System.getenv('MAVEN_REPO') ?: 'https://repo1.maven.org/maven2'
+
+repositories { maven { url = mavenRepo; allowInsecureProtocol = true } }
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+tasks.withType(JavaCompile).configureEach { options.release = 17; options.encoding = 'UTF-8' }
+
+sourceSets {
+    main { java { srcDirs = [repoRoot.path + '/app/src/main/java', repoRoot.path + '/build/gen'] } }
+    test { resources { srcDirs = ['src/test/resources', 'build/generated-config'] } }
+}
+
+dependencies {
+    compileOnly files(androidJar)
+    testCompileOnly files(androidJar)
+    testRuntimeOnly files(androidJar)
+    testImplementation('org.robolectric:robolectric:4.14.1') {
+        exclude group: 'androidx.test'
+        exclude group: 'androidx.test.espresso'
+    }
+    testImplementation files(shimJar)
+    testImplementation 'junit:junit:4.13.2'
+}
+
+def configDir = layout.buildDirectory.dir('generated-config/com/android/tools')
+tasks.register('writeTestConfig') {
+    outputs.dir configDir
+    doLast {
+        def f = configDir.get().file('test_config.properties').asFile
+        f.parentFile.mkdirs()
+        f.text = "android_merged_manifest=${repoRoot.path}/app/src/main/AndroidManifest.xml\n" +
+                "android_resource_apk=${repoRoot.path}/build/res.apk\n" +
+                "android_custom_package=tr.kolay.namazvakti\n"
+    }
+}
+processTestResources.dependsOn writeTestConfig
+
+test {
+    systemProperty 'robolectric.dependency.repo.url', mavenRepo
+    systemProperty 'robolectric.dependency.repo.id', 'central'
+    systemProperty 'screenshotDir', repoRoot.path + '/docs/ekran-goruntuleri'
+    maxHeapSize = '3g'
+    testLogging { events 'passed', 'failed', 'skipped'; exceptionFormat 'full'; showStandardStreams = true }
+}

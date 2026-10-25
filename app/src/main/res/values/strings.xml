@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kolay Namaz Vakti</string>
+    <string name="welcome">Hoş geldiniz</string>
+    <string name="welcome_body">Namaz vakitlerini göstermek için önce şehrinizi seçin.</string>
+    <string name="choose_place">Şehrimi Seç</string>
+    <string name="btn_city">Şehir</string>
+    <string name="btn_qibla">Kıble</string>
+    <string name="btn_settings">Ayarlar</string>
+    <string name="btn_back">Geri</string>
+    <string name="accuracy_note">Vakitler internet olmadan telefonunuzda hesaplanır. Diyanet takviminden küçük farklar olabilir; gerekirse Ayarlar bölümünden dakika düzeltmesi yapabilirsiniz.</string>
+    <string name="city_title">Şehrinizi seçin</string>
+    <string name="find_me">Konumumu Otomatik Bul</string>
+    <string name="search_hint">Şehir adı yazın…</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="offsets_title">Vakit düzeltme (dakika)</string>
+    <string name="offsets_body">Vakitler bulunduğunuz yerin takviminden farklıysa her vakit için dakika ekleyip çıkarabilirsiniz.</string>
+    <string name="sound_btn">Bildirim Sesini Seç</string>
+    <string name="battery_btn">Pil Ayarları (bildirim gecikirse)</string>
+    <string name="qibla_title">Kıble Yönü</string>
+    <string name="qibla_help">Telefonu masaya koyar gibi düz tutun. Yeşil ok Kâbe yönünü gösterir. Metal eşyalardan ve mıknatıslardan uzak durun.</string>
+    <string name="widget_desc">Sıradaki namaz vakti ve günün vakitleri</string>
+    <string name="channel_name">Namaz vakti bildirimleri</string>
+</resources>

@@ -1,0 +1,2 @@
+pluginManagement { repositories { maven { url = (System.getenv('MAVEN_REPO') ?: 'https://repo1.maven.org/maven2'); allowInsecureProtocol = true } } }
+rootProject.name = 'axtshim'

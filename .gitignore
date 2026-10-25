@@ -1,0 +1,7 @@
+build/
+keystore/
+.gradle/
+tools/robotest/build/
+tools/robotest/.gradle/
+tools/axt-shim/build/
+tools/axt-shim/.gradle/

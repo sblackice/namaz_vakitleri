@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/city_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        style="@style/Title"
+        android:text="@string/city_title" />
+
+    <Button
+        android:id="@+id/btn_find_me"
+        style="@style/BigButton"
+        android:layout_width="match_parent"
+        android:text="@string/find_me" />
+
+    <TextView
+        android:id="@+id/city_status"
+        style="@style/Body"
+        android:layout_marginTop="6dp"
+        android:textSize="19sp" />
+
+    <EditText
+        android:id="@+id/city_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/row_normal"
+        android:hint="@string/search_hint"
+        android:inputType="textCapWords|textNoSuggestions"
+        android:minHeight="64dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/text_main"
+        android:textColorHint="@color/text_past"
+        android:textSize="24sp" />
+
+    <ListView
+        android:id="@+id/city_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:divider="@color/border"
+        android:dividerHeight="1dp" />
+
+    <Button
+        android:id="@+id/btn_city_back"
+        style="@style/BigButton"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:text="@string/btn_back" />
+</LinearLayout>

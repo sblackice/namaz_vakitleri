@@ -1,0 +1,20 @@
+// Robolectric'in ihtiyaç duyduğu androidx.test 'monitor' kütüphanesini kaynak koddan derler.
+// Google Maven'e (dl.google.com) erişim olmayan ortamlar için. Kaynak: github.com/android/android-test (Apache-2.0)
+// Not: jar oluştuktan sonra internal/runner/runtime/ExposedInstrumentationApi.class jar'a eklenmelidir (bkz. README).
+plugins { id 'org.jetbrains.kotlin.jvm' version '2.0.21'; id 'java-library' }
+repositories { maven { url = (System.getenv('MAVEN_REPO') ?: 'https://repo1.maven.org/maven2'); allowInsecureProtocol = true } }
+def AT = System.getenv('ANDROID_TEST_SRC') // android/android-test deposu, etiket axt_08_14_2024
+sourceSets { main {
+  java { srcDirs = [AT + '/runner/monitor/java', AT + '/espresso/idling_resource/java', 'stubs']
+    exclude 'androidx/test/internal/platform/app/ActivityInvoker$$CC.java', 'androidx/test/internal/platform/app/ActivityInvokerDesugar.java', '**/BUILD', 'androidx/test/internal/runner/runtime/**' }
+  kotlin { srcDirs = [AT + '/runner/monitor/java', AT + '/espresso/idling_resource/java', 'stubs'] }
+}
+  rt { java { srcDirs = [AT + '/runner/monitor/java/androidx/test/internal/runner/runtime', 'stubs'] } }
+}
+dependencies { compileOnly files(System.getenv('ANDROID_JAR')); implementation 'com.google.errorprone:error_prone_annotations:2.28.0' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+kotlin { jvmToolchain(21) }
+tasks.withType(JavaCompile) { options.release = 17 }
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) { compilerOptions { jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17 } }
+dependencies { rtCompileOnly files(System.getenv('ANDROID_JAR')) }
+jar { exclude 'androidx/test/internal/runner/hidden/**', 'androidx/annotation/**'; from(sourceSets.rt.output) { include 'androidx/test/internal/runner/hidden/**' } }

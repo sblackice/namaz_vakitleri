@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:id="@+id/settings_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            style="@style/Title"
+            android:text="@string/settings_title" />
+
+        <Button
+            android:id="@+id/btn_notify"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_remind"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_scale"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/btn_sound"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:text="@string/sound_btn" />
+
+        <Button
+            android:id="@+id/btn_battery"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="16dp"
+            android:text="@string/battery_btn" />
+
+        <TextView
+            style="@style/Title"
+            android:textSize="25sp"
+            android:text="@string/offsets_title" />
+
+        <TextView
+            style="@style/Body"
+            android:layout_marginBottom="8dp"
+            android:textSize="19sp"
+            android:text="@string/offsets_body" />
+
+        <LinearLayout
+            android:id="@+id/offset_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/btn_settings_back"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:text="@string/btn_back" />
+    </LinearLayout>
+</ScrollView>
