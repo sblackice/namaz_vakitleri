@@ -1,6 +1,7 @@
 package tr.kolay.namazvakti;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -12,10 +13,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -91,12 +94,66 @@ public class AlarmTest {
     }
 
     @Test
-    public void bildirimKapaliysaBildirimYokAmaAlarmDevamEder() {
-        Prefs.setNotifyOn(app, false);
+    public void ezaniKapatilanVakitteBildirimYokAmaAlarmDevamEder() {
+        Prefs.setAdhanOn(app, PrayerCalc.OGLE, false);
         AlarmScheduler.schedule(app);
-        fire();
+        fire(); // öğle
         assertNull(lastNotification());
         assertNotNull(alarms.peekNextScheduledAlarm());
+        fire(); // ikindi açık kaldı
+        assertEquals("İkindi vakti girdi", lastNotification().extras.getString(Notification.EXTRA_TITLE));
+    }
+
+    @Test
+    public void ezanDosyasiSeciliyseEzanCalarBildirimSesiCalmaz() {
+        Prefs.setAdhanSound(app, "content://deneme/ezan.mp3", "ezan.mp3");
+        AlarmScheduler.schedule(app);
+        fire();
+        Intent started = shadowOf(app).getNextStartedService();
+        assertNotNull("ezan servisi başlamalı", started);
+        assertEquals(AdhanService.ACTION_PLAY, started.getAction());
+        assertEquals("Öğle vakti girdi", started.getStringExtra(AdhanService.EXTRA_TITLE));
+        assertNull("ses kanallı bildirim gösterilmemeli", lastNotification());
+    }
+
+    @Test
+    public void telefonSessizdeyseEzanCalmazSadeceBildirimGelir() {
+        Prefs.setAdhanSound(app, "content://deneme/ezan.mp3", "ezan.mp3");
+        ((AudioManager) app.getSystemService(Context.AUDIO_SERVICE))
+                .setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        AlarmScheduler.schedule(app);
+        fire();
+        assertNull(shadowOf(app).getNextStartedService());
+        assertEquals("Öğle vakti girdi", lastNotification().extras.getString(Notification.EXTRA_TITLE));
+
+        // Kullanıcı "sessizdeyken de okunsun" derse ezan çalar.
+        Prefs.setQuietWhenSilent(app, false);
+        nm.cancelAll();
+        fire();
+        assertNotNull(shadowOf(app).getNextStartedService());
+    }
+
+    @Test
+    public void imsakBildirimiSabahNamaziniSoyler() {
+        Clock.fixedNow = TestUtil.istanbul(2026, 10, 15, 4, 0);
+        AlarmScheduler.schedule(app);
+        fire();
+        String text = lastNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+        assertTrue(text, text.startsWith("Sabah namazının vakti başladı"));
+    }
+
+    @Test
+    public void ezanServisiDosyaYoksaKendiniDurdururVeBildirimBirakir() {
+        Intent i = new Intent(app, AdhanService.class).setAction(AdhanService.ACTION_PLAY)
+                .putExtra(AdhanService.EXTRA_TITLE, "Akşam vakti girdi")
+                .putExtra(AdhanService.EXTRA_TEXT, "Akşam namazı vakti: 18:00");
+        AdhanService svc = Robolectric.buildService(AdhanService.class, i).create()
+                .startCommand(0, 1).get();
+        assertTrue(shadowOf(svc).isStoppedBySelf());
+        assertFalse(AdhanService.playing);
+        Notification n = shadowOf(nm).getNotification(AdhanService.NOTIFICATION_ID);
+        assertNotNull(n);
+        assertEquals("Akşam vakti girdi", n.extras.getString(Notification.EXTRA_TITLE));
     }
 
     @Test

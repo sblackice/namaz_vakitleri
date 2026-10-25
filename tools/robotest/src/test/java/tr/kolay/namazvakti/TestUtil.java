@@ -33,8 +33,8 @@ final class TestUtil {
         return String.format("%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
     }
 
-    /** Ekranın görüntüsünü PNG olarak kaydeder (gerçek çizim motoruyla). */
-    static File screenshot(Activity a, String name) throws Exception {
+    /** Ekran yerleşimini hesaplatır (kaydırma vb. için). */
+    static View layout(Activity a) {
         ShadowLooper.idleMainLooper();
         View root = a.getWindow().getDecorView();
         int w = root.getWidth(), h = root.getHeight();
@@ -45,6 +45,13 @@ final class TestUtil {
                     View.MeasureSpec.makeMeasureSpec(h, View.MeasureSpec.EXACTLY));
             root.layout(0, 0, w, h);
         }
+        return root;
+    }
+
+    /** Ekranın görüntüsünü PNG olarak kaydeder (gerçek çizim motoruyla). */
+    static File screenshot(Activity a, String name) throws Exception {
+        View root = layout(a);
+        int w = root.getWidth(), h = root.getHeight();
         Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         root.draw(new Canvas(b));
         File dir = new File(System.getProperty("screenshotDir", "build/screenshots"));

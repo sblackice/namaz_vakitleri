@@ -8,6 +8,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import org.robolectric.RuntimeEnvironment;
 import java.util.List;
@@ -84,7 +85,9 @@ public class MainActivityTest {
         String count = ((TextView) a.findViewById(R.id.countdown)).getText().toString();
         System.out.println("Sıradaki kutusu: " + next + " / " + count);
         assertTrue(next, next.contains("ÖĞLE"));
-        assertTrue(count, count.endsWith("dakika kaldı"));
+        assertTrue("saat:dakika:saniye olmalı: " + count, count.matches("\\d\\d:\\d\\d:\\d\\d"));
+        assertEquals(Times.hms(r.t[PrayerCalc.OGLE] - Clock.now()).substring(0, 5), count.substring(0, 5));
+        assertTrue("geri sayım büyük olmalı", TestUtil.sp((TextView) a.findViewById(R.id.countdown)) >= 60f);
         assertEquals("Ankara", ((TextView) a.findViewById(R.id.place)).getText().toString());
         String hijri = ((TextView) a.findViewById(R.id.hijri)).getText().toString();
         System.out.println("Tarih: " + ((TextView) a.findViewById(R.id.date)).getText() + " / " + hijri);
@@ -98,7 +101,7 @@ public class MainActivityTest {
         Clock.fixedNow = TestUtil.istanbul(2026, 10, 15, 23, 30);
         MainActivity a = start();
         String next = ((TextView) a.findViewById(R.id.next_label)).getText().toString();
-        assertTrue(next, next.contains("İMSAK") && next.contains("yarın"));
+        assertTrue(next, next.contains("İMSAK") && next.contains("Yarın"));
         TestUtil.screenshot(a, "2-ana-ekran-gece");
     }
 
@@ -110,6 +113,82 @@ public class MainActivityTest {
         TextView time = (TextView) ((LinearLayout) a.findViewById(R.id.rows)).getChildAt(0)
                 .findViewById(R.id.row_time);
         assertTrue(TestUtil.sp(time) >= 55f);
+        TestUtil.layout(a);
+        assertEquals("geri sayım tek satır olmalı", 1,
+                ((TextView) a.findViewById(R.id.countdown)).getLineCount());
         TestUtil.screenshot(a, "3-ana-ekran-en-buyuk-yazi");
+    }
+
+    @Test
+    public void geriSayimHerSaniyeAzalir() {
+        TestUtil.setCity(app, "Ankara");
+        Clock.fixedNow = TestUtil.istanbul(2026, 10, 15, 12, 0) + 7000; // 12:00:07
+        MainActivity a = start();
+        TextView count = (TextView) a.findViewById(R.id.countdown);
+        String first = count.getText().toString();
+        Clock.fixedNow += 1000;
+        a.page(MainActivity.HOME).onTick(Clock.now());
+        String second = count.getText().toString();
+        System.out.println("Geri sayım: " + first + " -> " + second);
+        int s1 = Integer.parseInt(first.substring(6)), s2 = Integer.parseInt(second.substring(6));
+        assertEquals((s1 + 59) % 60, s2);
+    }
+
+    @Test
+    public void vakitGirinceSiradakiVakteGecer() {
+        TestUtil.setCity(app, "Ankara");
+        long ogle = Times.forDay(app, Clock.now(), 0)[PrayerCalc.OGLE];
+        Clock.fixedNow = ogle - 1000;
+        MainActivity a = start();
+        assertTrue(((TextView) a.findViewById(R.id.next_label)).getText().toString().contains("ÖĞLE"));
+        assertEquals("00:00:01", ((TextView) a.findViewById(R.id.countdown)).getText().toString());
+        Clock.fixedNow = ogle + 1;
+        a.page(MainActivity.HOME).onTick(Clock.now());
+        String next = ((TextView) a.findViewById(R.id.next_label)).getText().toString();
+        assertTrue(next, next.contains("İKİNDİ"));
+    }
+
+    @Test
+    public void gununHadisiGosterilirVeErtesiGunDegisir() throws Exception {
+        TestUtil.setCity(app, "Ankara");
+        MainActivity a = start();
+        TextView text = (TextView) a.findViewById(R.id.hadith_text);
+        TextView src = (TextView) a.findViewById(R.id.hadith_source);
+        int i = Hadisler.indexFor(Clock.now(), Times.tz(app));
+        assertTrue(text.getText().toString().contains(Hadisler.LISTE[i].metin));
+        assertEquals("Kaynak: " + Hadisler.LISTE[i].kaynak, src.getText().toString());
+        System.out.println("Günün hadisi (" + i + "): " + text.getText() + " | " + src.getText());
+
+        ScrollView sv = (ScrollView) a.findViewById(R.id.home_scroll);
+        View card = a.findViewById(R.id.hadith_card);
+        TestUtil.layout(a);
+        sv.scrollTo(0, card.getTop() - 40);
+        TestUtil.screenshot(a, "1b-ana-ekran-gunun-hadisi");
+
+        Clock.fixedNow += 24 * 3600 * 1000L;
+        a.page(MainActivity.HOME).onTick(Clock.now());
+        int j = Hadisler.indexFor(Clock.now(), Times.tz(app));
+        assertEquals((i + 1) % Hadisler.LISTE.length, j);
+        assertTrue(text.getText().toString().contains(Hadisler.LISTE[j].metin));
+    }
+
+    @Test
+    public void altMenudeBesDugmeVarVeSayfaDegisir() {
+        TestUtil.setCity(app, "Ankara");
+        MainActivity a = start();
+        LinearLayout nav = (LinearLayout) a.findViewById(R.id.bottom_nav);
+        assertEquals(5, nav.getChildCount());
+        String[] labels = {"Ana Sayfa", "Ezan", "Dini Günler", "Kıble", "Dualar"};
+        for (int k = 0; k < 5; k++) {
+            assertEquals(labels[k], ((TextView) nav.getChildAt(k).findViewById(R.id.tab_label))
+                    .getText().toString());
+        }
+        assertEquals(View.VISIBLE, a.findViewById(R.id.root).getVisibility());
+        a.findViewById(R.id.tab_duas).performClick();
+        assertEquals(MainActivity.DUAS, a.currentTab());
+        assertEquals(View.VISIBLE, a.findViewById(R.id.duas_root).getVisibility());
+        assertEquals(View.GONE, ((View) a.findViewById(R.id.root).getParent()).getVisibility());
+        a.onBackPressed();
+        assertEquals(MainActivity.HOME, a.currentTab());
     }
 }

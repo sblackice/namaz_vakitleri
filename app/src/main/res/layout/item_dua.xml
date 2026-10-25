@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/row_normal"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dua_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/accent"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dua_arabic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="start"
+        android:lineSpacingMultiplier="1.35"
+        android:textColor="@color/text_main"
+        android:textDirection="rtl"
+        android:textSize="27sp" />
+
+    <TextView
+        style="@style/Label"
+        android:text="@string/label_reading" />
+
+    <TextView
+        android:id="@+id/dua_reading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.1"
+        android:textColor="@color/text_main"
+        android:textSize="21sp" />
+
+    <TextView
+        style="@style/Label"
+        android:text="@string/label_meaning" />
+
+    <TextView
+        android:id="@+id/dua_meaning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingMultiplier="1.1"
+        android:textColor="@color/text_main"
+        android:textSize="21sp" />
+
+    <TextView
+        android:id="@+id/dua_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_main"
+        android:textSize="18sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/dua_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/text_past"
+        android:textSize="15sp" />
+</LinearLayout>

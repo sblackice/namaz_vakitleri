@@ -4,21 +4,62 @@
     <string name="welcome">Hoş geldiniz</string>
     <string name="welcome_body">Namaz vakitlerini göstermek için önce şehrinizi seçin.</string>
     <string name="choose_place">Şehrimi Seç</string>
-    <string name="btn_city">Şehir</string>
-    <string name="btn_qibla">Kıble</string>
-    <string name="btn_settings">Ayarlar</string>
+    <string name="change_city">Değiştir</string>
     <string name="btn_back">Geri</string>
-    <string name="accuracy_note">Vakitler internet olmadan telefonunuzda hesaplanır. Diyanet takviminden küçük farklar olabilir; gerekirse Ayarlar bölümünden dakika düzeltmesi yapabilirsiniz.</string>
+    <string name="btn_back_arrow">‹ Geri</string>
+    <string name="accuracy_note">Vakitler internet olmadan telefonunuzda hesaplanır. Diyanet takviminden küçük farklar olabilir; gerekirse Ezan sekmesindeki “Diğer Ayarlar” bölümünden dakika düzeltmesi yapabilirsiniz.</string>
+
+    <!-- Alt menü -->
+    <string name="tab_home">Ana Sayfa</string>
+    <string name="tab_adhan">Ezan</string>
+    <string name="tab_days">Dini Günler</string>
+    <string name="tab_qibla">Kıble</string>
+    <string name="tab_duas">Dualar</string>
+
+    <!-- Ana Sayfa -->
+    <string name="countdown_units">saat : dakika : saniye</string>
+    <string name="scroll_hint">▼ Günün Hadisi için aşağı kaydırın</string>
+    <string name="hadith_title">Günün Hadisi</string>
+    <string name="hadith_note">Hadis her gün yenilenir. Yalnızca Buhârî ve Müslim\'in Sahîh\'lerinden alınmıştır; numaralar Fuad Abdülbâkî numaralandırmasına göredir.</string>
+
+    <!-- Ezan ve İzinler -->
+    <string name="adhan_title">Ezan ve İzinler</string>
+    <string name="adhan_intro">Vakit girince hangi vakitlerde ezan okunsun? Düğmeye dokunarak açıp kapatın.</string>
+    <string name="sound_title">Ezan sesi</string>
+    <string name="pick_sound">Ezan Ses Dosyası Seç</string>
+    <string name="test_sound">▶ Ezanı Dene</string>
+    <string name="stop_sound">■ Durdur</string>
+    <string name="default_sound">Telefonun Bildirim Sesini Kullan</string>
+    <string name="sound_note">Ezan kaydı telif hakları nedeniyle uygulamaya eklenmedi. Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa “Ezan Ses Dosyası Seç” ile seçebilirsiniz. Seçilen ezan, telefonun ALARM ses seviyesinde çalar; bildirimdeki “Durdur” ile susturulur.</string>
+    <string name="remind_title">Vakitten önce hatırlatma</string>
+    <string name="perm_title">İzinler</string>
+    <string name="perm_intro">Ezanın zamanında okunması için aşağıdakilerin hepsi yeşil (✔) olmalı. Kırmızı olanın altındaki düğmeye dokunun.</string>
+    <string name="other_title">Diğer ayarlar</string>
+    <string name="more_settings">Yazı Boyutu ve Vakit Düzeltme</string>
+    <string name="battery_note">Bazı telefonlarda (özellikle Xiaomi, Huawei, Samsung) pil tasarrufu ezanı geciktirebilir. Uygulamayı “Zorla durdur” yaparsanız ezan, uygulamayı tekrar açana kadar okunmaz.</string>
+
+    <!-- Dini Günler -->
+    <string name="days_title">Dini Gün ve Geceler</string>
+    <string name="days_intro">Yaklaşan dini gün ve geceler tarih sırasıyla. Bilgi almak için birine dokunun.</string>
+
+    <!-- Kıble -->
+    <string name="qibla_title">Kıble Pusulası</string>
+    <string name="qibla_help">Telefonu masaya koyar gibi düz tutun ve yavaşça dönün. Seccadenin üzerindeki ok, en üstteki yeşil işaretle aynı hizaya gelince Kıble\'ye dönmüş olursunuz. Metal eşyalardan ve mıknatıslardan uzak durun.</string>
+
+    <!-- Dualar -->
+    <string name="duas_title">Namazda Okunan Dualar</string>
+    <string name="duas_intro">Her duanın adı, Arapça yazılışı, Türkçe okunuşu ve anlamı. Aşağı kaydırarak sırayla okuyabilirsiniz.</string>
+    <string name="label_reading">Okunuşu</string>
+    <string name="label_meaning">Anlamı</string>
+    <string name="duas_note">Kur\'an ayetlerinin Arapçası Medine Mushafı metnidir (QuranEnc). Diğer duaların Arapçası, altlarında yazılı hadis kaynağından alınmıştır. Okunuşlar Türkiye\'de yaygın yazımla verilmiştir; doğru telaffuz için bir hocadan veya Diyanet\'in Namaz Hocası kitabından yararlanabilirsiniz.</string>
+
+    <!-- Şehir ve ayarlar -->
     <string name="city_title">Şehrinizi seçin</string>
     <string name="find_me">Konumumu Otomatik Bul</string>
     <string name="search_hint">Şehir adı yazın…</string>
-    <string name="settings_title">Ayarlar</string>
+    <string name="settings_title">Diğer Ayarlar</string>
     <string name="offsets_title">Vakit düzeltme (dakika)</string>
     <string name="offsets_body">Vakitler bulunduğunuz yerin takviminden farklıysa her vakit için dakika ekleyip çıkarabilirsiniz.</string>
-    <string name="sound_btn">Bildirim Sesini Seç</string>
-    <string name="battery_btn">Pil Ayarları (bildirim gecikirse)</string>
-    <string name="qibla_title">Kıble Yönü</string>
-    <string name="qibla_help">Telefonu masaya koyar gibi düz tutun. Yeşil ok Kâbe yönünü gösterir. Metal eşyalardan ve mıknatıslardan uzak durun.</string>
     <string name="widget_desc">Sıradaki namaz vakti ve günün vakitleri</string>
     <string name="channel_name">Namaz vakti bildirimleri</string>
 </resources>

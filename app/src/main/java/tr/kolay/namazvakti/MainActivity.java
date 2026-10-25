@@ -3,31 +3,45 @@ package tr.kolay.namazvakti;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/** Ana ekran: bugünün 6 vakti büyük yazıyla ve sıradaki vakte kalan süre. */
+/**
+ * Ana pencere. En altta 5 menü düğmesi vardır:
+ * Ana Sayfa, Ezan (ve izinler), Dini Günler, Kıble, Dualar.
+ */
 public class MainActivity extends Activity {
     static final String NOTIF_PERMISSION = "android.permission.POST_NOTIFICATIONS";
+    static final String EXTRA_TAB = "tab";
+    static final int HOME = 0, ADHAN = 1, DAYS = 2, QIBLA = 3, DUAS = 4;
+    static final int[] TAB_IDS = {R.id.tab_home, R.id.tab_adhan, R.id.tab_days, R.id.tab_qibla,
+            R.id.tab_duas};
+    private static final int[] TAB_LABELS = {R.string.tab_home, R.string.tab_adhan,
+            R.string.tab_days, R.string.tab_qibla, R.string.tab_duas};
+    private static final int[] TAB_ICONS = {R.drawable.tab_home, R.drawable.tab_adhan,
+            R.drawable.tab_days, R.drawable.tab_qibla, R.drawable.tab_duas};
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final TextView[] nameViews = new TextView[PrayerCalc.COUNT];
-    private final TextView[] timeViews = new TextView[PrayerCalc.COUNT];
-    private final View[] rowViews = new View[PrayerCalc.COUNT];
-    private TextView placeView, dateView, hijriView, nextView, countdownView;
-    private View card, noPlaceBox, timesBox;
+    private Page[] pages;
+    private View[] tabs;
+    private int current = -1;
+    private boolean resumed;
     private float appliedScale;
 
     private final Runnable tick = new Runnable() {
         @Override public void run() {
-            refresh();
-            handler.postDelayed(this, 10000);
+            long now = Clock.now();
+            if (current >= 0) pages[current].onTick(now);
+            handler.postDelayed(this, 1000 - (System.currentTimeMillis() % 1000) + 5);
         }
     };
 
@@ -35,54 +49,81 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        placeView = (TextView) findViewById(R.id.place);
-        dateView = (TextView) findViewById(R.id.date);
-        hijriView = (TextView) findViewById(R.id.hijri);
-        nextView = (TextView) findViewById(R.id.next_label);
-        countdownView = (TextView) findViewById(R.id.countdown);
-        card = findViewById(R.id.next_card);
-        noPlaceBox = findViewById(R.id.no_place_box);
-        timesBox = findViewById(R.id.times_box);
+        appliedScale = Prefs.textScale(this);
 
-        LinearLayout rows = (LinearLayout) findViewById(R.id.rows);
-        LayoutInflater inf = getLayoutInflater();
-        for (int i = 0; i < PrayerCalc.COUNT; i++) {
-            View row = inf.inflate(R.layout.row_prayer, rows, false);
-            nameViews[i] = (TextView) row.findViewById(R.id.row_name);
-            timeViews[i] = (TextView) row.findViewById(R.id.row_time);
-            nameViews[i].setText(Times.NAMES[i]);
-            rowViews[i] = row;
-            rows.addView(row);
+        FrameLayout content = (FrameLayout) findViewById(R.id.content);
+        pages = new Page[] {new HomePage(this, content), new AdhanPage(this, content),
+                new DaysPage(this, content), new QiblaPage(this, content), new DuasPage(this, content)};
+        for (Page p : pages) {
+            Ui.scaleText(p.view, appliedScale);
+            p.view.setVisibility(View.GONE);
+            content.addView(p.view);
         }
 
-        View.OnClickListener openCity = new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CityActivity.class));
-            }
-        };
-        findViewById(R.id.btn_city).setOnClickListener(openCity);
-        findViewById(R.id.btn_choose_place).setOnClickListener(openCity);
-        placeView.setOnClickListener(openCity);
-        findViewById(R.id.btn_qibla).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, QiblaActivity.class));
-            }
-        });
-        findViewById(R.id.btn_settings).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            }
-        });
+        LinearLayout nav = (LinearLayout) findViewById(R.id.bottom_nav);
+        tabs = new View[pages.length];
+        for (int i = 0; i < pages.length; i++) {
+            final int idx = i;
+            View t = getLayoutInflater().inflate(R.layout.item_tab, nav, false);
+            t.setId(TAB_IDS[i]);
+            ((ImageView) t.findViewById(R.id.tab_icon)).setImageResource(TAB_ICONS[i]);
+            ((TextView) t.findViewById(R.id.tab_label)).setText(TAB_LABELS[i]);
+            t.setContentDescription(getString(TAB_LABELS[i]));
+            t.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { select(idx); }
+            });
+            tabs[i] = t;
+            nav.addView(t);
+        }
 
-        appliedScale = Prefs.textScale(this);
-        Ui.scaleText(findViewById(R.id.root), appliedScale);
+        int start = savedInstanceState != null ? savedInstanceState.getInt(EXTRA_TAB, HOME)
+                : getIntent().getIntExtra(EXTRA_TAB, HOME);
+        select(start);
         askNotificationPermission();
     }
 
-    private void askNotificationPermission() {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra(EXTRA_TAB)) select(intent.getIntExtra(EXTRA_TAB, HOME));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle out) {
+        super.onSaveInstanceState(out);
+        out.putInt(EXTRA_TAB, current);
+    }
+
+    /** Alt menüden bir sayfa seçer. */
+    void select(int idx) {
+        if (idx < 0 || idx >= pages.length) idx = HOME;
+        if (idx == current) return;
+        if (current >= 0) {
+            if (resumed) pages[current].onHide();
+            pages[current].view.setVisibility(View.GONE);
+        }
+        current = idx;
+        pages[idx].view.setVisibility(View.VISIBLE);
+        for (int i = 0; i < tabs.length; i++) styleTab(tabs[i], i == idx);
+        if (resumed) pages[idx].onShow();
+    }
+
+    int currentTab() { return current; }
+
+    Page page(int idx) { return pages[idx]; }
+
+    private void styleTab(View t, boolean selected) {
+        t.setBackgroundResource(selected ? R.drawable.nav_selected : R.drawable.nav_normal);
+        t.setSelected(selected);
+        int color = getColor(selected ? R.color.on_accent : R.color.text_main);
+        ((TextView) t.findViewById(R.id.tab_label)).setTextColor(color);
+        ((ImageView) t.findViewById(R.id.tab_icon)).setImageTintList(ColorStateList.valueOf(color));
+    }
+
+    void askNotificationPermission() {
         if (Build.VERSION.SDK_INT >= 33
                 && checkSelfPermission(NOTIF_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[] {NOTIF_PERMISSION}, 1);
+            requestPermissions(new String[] {NOTIF_PERMISSION}, AdhanPage.REQ_NOTIF);
         }
     }
 
@@ -97,9 +138,10 @@ public class MainActivity extends Activity {
             Prefs.setAskedFirstRun(this);
             startActivity(new Intent(this, CityActivity.class));
         }
-        refresh();
+        resumed = true;
+        pages[current].onShow();
         handler.removeCallbacks(tick);
-        handler.postDelayed(tick, 10000);
+        handler.post(tick);
         AlarmScheduler.schedule(this);
         NextPrayerWidget.updateAll(this);
     }
@@ -107,42 +149,33 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        resumed = false;
         handler.removeCallbacks(tick);
+        if (current >= 0) pages[current].onHide();
     }
 
-    void refresh() {
-        long now = Clock.now();
-        boolean has = Prefs.hasLocation(this);
-        noPlaceBox.setVisibility(has ? View.GONE : View.VISIBLE);
-        timesBox.setVisibility(has ? View.VISIBLE : View.GONE);
-        if (!has) return;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Page p : pages) p.onActivityResult(requestCode, resultCode, data);
+    }
 
-        placeView.setText(Prefs.placeName(this));
-        dateView.setText(Times.dateLine(this, now));
-        String hijri = Times.hijriLine(this, now);
-        hijriView.setText(hijri);
-        hijriView.setVisibility(hijri.length() == 0 ? View.GONE : View.VISIBLE);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (current == ADHAN && resumed) pages[ADHAN].onShow();
+    }
 
-        long[] today = Times.forDay(this, now, 0);
-        Times.Next next = Times.next(this, now);
-        int highlight = next.tomorrow ? -1 : next.index;
-        for (int i = 0; i < PrayerCalc.COUNT; i++) {
-            timeViews[i].setText(Times.hhmm(this, today[i]));
-            int bg, color;
-            if (i == highlight) {
-                bg = R.drawable.row_next;
-                color = getColor(R.color.on_accent);
-            } else {
-                bg = R.drawable.row_normal;
-                color = getColor(today[i] <= now ? R.color.text_past : R.color.text_main);
-            }
-            rowViews[i].setBackgroundResource(bg);
-            nameViews[i].setTextColor(color);
-            timeViews[i].setTextColor(color);
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onBackPressed() {
+        if (current != HOME) {
+            select(HOME);
+        } else {
+            super.onBackPressed();
         }
-        String when = next.tomorrow ? " (yarın " : " (";
-        nextView.setText("Sıradaki vakit: " + Times.upper(Times.NAMES[next.index])
-                + when + Times.hhmm(this, next.time) + ")");
-        countdownView.setText(Times.remaining(next.time - now));
     }
+
+    /** Dinamik olarak eklenen satırların yazılarını da seçili boyuta büyütür. */
+    void scale(ViewGroup v) { Ui.scaleText(v, appliedScale); }
 }

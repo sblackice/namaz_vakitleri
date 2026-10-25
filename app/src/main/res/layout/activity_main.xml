@@ -1,133 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Ana pencere: üstte seçili sayfa, en altta 5 menü düğmesi. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
-    android:fillViewport="true">
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <LinearLayout
-        android:id="@+id/root"
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:id="@+id/no_place_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                style="@style/Title"
-                android:text="@string/welcome" />
-
-            <TextView
-                style="@style/Body"
-                android:text="@string/welcome_body" />
-
-            <Button
-                android:id="@+id/btn_choose_place"
-                style="@style/BigButton"
-                android:layout_width="match_parent"
-                android:layout_marginTop="16dp"
-                android:text="@string/choose_place" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/times_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_main"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_main"
-                android:textSize="21sp" />
-
-            <TextView
-                android:id="@+id/hijri"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_past"
-                android:textSize="19sp" />
-
-            <LinearLayout
-                android:id="@+id/next_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/card"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:id="@+id/next_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/on_accent"
-                    android:textSize="22sp" />
-
-                <TextView
-                    android:id="@+id/countdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/on_accent"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/rows"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_city"
-                style="@style/BigButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:text="@string/btn_city" />
-
-            <Button
-                android:id="@+id/btn_qibla"
-                style="@style/BigButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:text="@string/btn_qibla" />
-
-            <Button
-                android:id="@+id/btn_settings"
-                style="@style/BigButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="@string/btn_settings" />
-        </LinearLayout>
-
-        <TextView
-            style="@style/Note"
-            android:text="@string/accuracy_note" />
-    </LinearLayout>
-</ScrollView>
+        android:background="@drawable/nav_bar"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="6dp" />
+</LinearLayout>

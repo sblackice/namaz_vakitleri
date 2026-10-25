@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ana Sayfa: geri sayım, günün vakitleri ve (aşağı kaydırınca) Günün Hadisi. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/no_place_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Title"
+                android:text="@string/welcome" />
+
+            <TextView
+                style="@style/Body"
+                android:text="@string/welcome_body" />
+
+            <Button
+                android:id="@+id/btn_choose_place"
+                style="@style/BigButton"
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:text="@string/choose_place" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/times_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/place"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/text_main"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_city"
+                    style="@style/BigButton"
+                    android:minHeight="56dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/change_city"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_main"
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/hijri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_past"
+                android:textSize="19sp" />
+
+            <LinearLayout
+                android:id="@+id/next_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <TextView
+                    android:id="@+id/next_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/on_accent"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/countdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFeatureSettings="tnum"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/on_accent"
+                    android:textSize="62sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/countdown_units"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/countdown_units"
+                    android:textColor="@color/on_accent"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/next_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center"
+                    android:textColor="@color/on_accent"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rows"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/scroll_hint"
+                style="@style/Note"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:text="@string/scroll_hint" />
+
+            <LinearLayout
+                android:id="@+id/hadith_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/card_outline"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/hadith_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hadith_title"
+                    android:textColor="@color/accent"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/hadith_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingMultiplier="1.15"
+                    android:textColor="@color/text_main"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/hadith_narrator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_main"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/hadith_source"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_main"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/Note"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/hadith_note"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/Note"
+            android:text="@string/accuracy_note" />
+    </LinearLayout>
+</ScrollView>

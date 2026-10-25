@@ -34,9 +34,34 @@ final class Prefs {
                 .apply();
     }
 
-    static boolean notifyOn(Context c) { return sp(c).getBoolean("notify", true); }
+    /** Bu vakit girince ezan/bildirim olsun mu? Güneş bir namaz vakti değildir, varsayılanı kapalı. */
+    static boolean adhanOn(Context c, int i) {
+        return sp(c).getBoolean("adhan" + i, i != PrayerCalc.GUNES);
+    }
 
-    static void setNotifyOn(Context c, boolean on) { sp(c).edit().putBoolean("notify", on).apply(); }
+    static void setAdhanOn(Context c, int i, boolean on) {
+        sp(c).edit().putBoolean("adhan" + i, on).apply();
+    }
+
+    /** Kullanıcının seçtiği ezan ses dosyası (yoksa null: telefonun bildirim sesi çalar). */
+    static String adhanUri(Context c) { return sp(c).getString("adhanUri", null); }
+
+    static String adhanName(Context c) { return sp(c).getString("adhanName", ""); }
+
+    static void setAdhanSound(Context c, String uri, String name) {
+        sp(c).edit().putString("adhanUri", uri).putString("adhanName", name).apply();
+    }
+
+    static void clearAdhanSound(Context c) {
+        sp(c).edit().remove("adhanUri").remove("adhanName").apply();
+    }
+
+    /** Telefon sessiz veya titreşimdeyken ezan sesi çalınmasın mı? */
+    static boolean quietWhenSilent(Context c) { return sp(c).getBoolean("quietSilent", true); }
+
+    static void setQuietWhenSilent(Context c, boolean on) {
+        sp(c).edit().putBoolean("quietSilent", on).apply();
+    }
 
     static int remindBefore(Context c) { return sp(c).getInt("remind", 0); }
 

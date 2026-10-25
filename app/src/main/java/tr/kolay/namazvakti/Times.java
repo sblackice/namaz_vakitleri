@@ -85,6 +85,22 @@ final class Times {
 
     static String upper(String s) { return s.toUpperCase(TR); }
 
+    /** Geri sayım: "01:23:45" (saat:dakika:saniye). Saniye yukarı yuvarlanır. */
+    static String hms(long ms) {
+        long sec = ms <= 0 ? 0 : (ms + 999) / 1000;
+        return String.format(Locale.US, "%02d:%02d:%02d", sec / 3600, (sec / 60) % 60, sec % 60);
+    }
+
+    /** "10 Aralık 2026, Perşembe" */
+    static String longDate(int y, int m, int d) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"), TR);
+        cal.clear();
+        cal.set(y, m - 1, d, 12, 0, 0);
+        SimpleDateFormat f = new SimpleDateFormat("d MMMM yyyy, EEEE", TR);
+        f.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return f.format(cal.getTime());
+    }
+
     /** "2 saat 5 dakika kaldı" gibi okunaklı kalan süre. */
     static String remaining(long ms) {
         if (ms < 60000) return "1 dakikadan az kaldı";

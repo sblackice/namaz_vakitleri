@@ -1,42 +1,23 @@
 package tr.kolay.namazvakti;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/** Basit ayarlar: büyük düğmeler, her düğmeye basınca değer değişir. */
+/** Diğer ayarlar: yazı boyutu ve her vakit için dakika düzeltmesi. */
 public class SettingsActivity extends Activity {
-    private Button notifyBtn, remindBtn, scaleBtn;
+    private Button scaleBtn;
     private final TextView[] offsetValues = new TextView[PrayerCalc.COUNT];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        notifyBtn = (Button) findViewById(R.id.btn_notify);
-        remindBtn = (Button) findViewById(R.id.btn_remind);
         scaleBtn = (Button) findViewById(R.id.btn_scale);
-
-        notifyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                Prefs.setNotifyOn(SettingsActivity.this, !Prefs.notifyOn(SettingsActivity.this));
-                changed();
-            }
-        });
-        remindBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                Prefs.setRemindBefore(SettingsActivity.this,
-                        nextChoice(Prefs.REMIND_CHOICES, Prefs.remindBefore(SettingsActivity.this)));
-                changed();
-            }
-        });
         scaleBtn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 float cur = Prefs.textScale(SettingsActivity.this);
@@ -47,14 +28,6 @@ public class SettingsActivity extends Activity {
                 Prefs.setTextScale(SettingsActivity.this,
                         Prefs.SCALE_CHOICES[(idx + 1) % Prefs.SCALE_CHOICES.length]);
                 recreate();
-            }
-        });
-        findViewById(R.id.btn_sound).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { openSoundSettings(); }
-        });
-        findViewById(R.id.btn_battery).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                safeStart(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
             }
         });
         findViewById(R.id.btn_settings_back).setOnClickListener(new View.OnClickListener() {
@@ -89,46 +62,18 @@ public class SettingsActivity extends Activity {
 
     void bump(int i, int delta) {
         Prefs.setOffset(this, i, Prefs.offsets(this)[i] + delta);
-        changed();
-    }
-
-    private void changed() {
         show();
         AlarmScheduler.schedule(this);
         NextPrayerWidget.updateAll(this);
     }
 
     void show() {
-        notifyBtn.setText("Vakit girince bildirim: " + (Prefs.notifyOn(this) ? "AÇIK" : "KAPALI"));
-        int r = Prefs.remindBefore(this);
-        remindBtn.setText("Vakitten önce hatırlat: " + (r == 0 ? "KAPALI" : r + " dakika"));
         float s = Prefs.textScale(this);
         String size = s < 1.1f ? "Büyük" : (s < 1.3f ? "Daha büyük" : "En büyük");
         scaleBtn.setText("Yazı boyutu: " + size);
         int[] off = Prefs.offsets(this);
         for (int i = 0; i < off.length; i++) {
             offsetValues[i].setText(off[i] > 0 ? "+" + off[i] : String.valueOf(off[i]));
-        }
-    }
-
-    private void openSoundSettings() {
-        Intent i;
-        if (Build.VERSION.SDK_INT >= 26) {
-            Notifier.ensureChannel(this);
-            i = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-                    .putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName())
-                    .putExtra(Settings.EXTRA_CHANNEL_ID, Notifier.CHANNEL_ID);
-        } else {
-            i = new Intent(Settings.ACTION_SOUND_SETTINGS);
-        }
-        safeStart(i);
-    }
-
-    private void safeStart(Intent i) {
-        try {
-            startActivity(i);
-        } catch (Exception e) {
-            startActivity(new Intent(Settings.ACTION_SETTINGS));
         }
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tr.kolay.namazvakti"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2"
+    android:versionName="2.0">
 
     <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="34" />
 
@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Seçilen ezan ses dosyasını çalan servis için (Android 9+ ve 14+). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <!-- Konum yalnızca "Konumumu Otomatik Bul" düğmesine basınca bir kez kullanılır. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -39,10 +42,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".SettingsActivity" android:exported="false" />
-        <activity
-            android:name=".QiblaActivity"
+        <activity android:name=".DayDetailActivity" android:exported="false" />
+
+        <service
+            android:name=".AdhanService"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:foregroundServiceType="mediaPlayback" />
 
         <receiver android:name=".AlarmReceiver" android:exported="false" />
         <receiver android:name=".BootReceiver" android:exported="true">

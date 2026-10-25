@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ezan ve İzinler: hangi vakitte ezan okunacağı, ezan sesi ve telefon izinleri. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/adhan_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            style="@style/Title"
+            android:text="@string/adhan_title" />
+
+        <TextView
+            style="@style/Body"
+            android:textSize="19sp"
+            android:text="@string/adhan_intro" />
+
+        <LinearLayout
+            android:id="@+id/adhan_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" />
+
+        <TextView
+            style="@style/Section"
+            android:text="@string/sound_title" />
+
+        <TextView
+            android:id="@+id/sound_state"
+            style="@style/Body"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_pick_sound"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="@string/pick_sound" />
+
+        <Button
+            android:id="@+id/btn_test_sound"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="@string/test_sound" />
+
+        <Button
+            android:id="@+id/btn_default_sound"
+            style="@style/OffButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="@string/default_sound" />
+
+        <Button
+            android:id="@+id/btn_quiet"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            style="@style/Note"
+            android:text="@string/sound_note" />
+
+        <TextView
+            style="@style/Section"
+            android:text="@string/remind_title" />
+
+        <Button
+            android:id="@+id/btn_remind"
+            style="@style/BigButton"
+            android:layout_width="match_parent" />
+
+        <TextView
+            style="@style/Section"
+            android:text="@string/perm_title" />
+
+        <TextView
+            style="@style/Body"
+            android:textSize="19sp"
+            android:text="@string/perm_intro" />
+
+        <LinearLayout
+            android:id="@+id/perm_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <TextView
+            style="@style/Section"
+            android:text="@string/other_title" />
+
+        <Button
+            android:id="@+id/btn_more_settings"
+            style="@style/BigButton"
+            android:layout_width="match_parent"
+            android:text="@string/more_settings" />
+
+        <TextView
+            style="@style/Note"
+            android:text="@string/battery_note" />
+    </LinearLayout>
+</ScrollView>

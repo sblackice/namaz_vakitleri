@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Alt menü düğmeleri (koddan oluşturulur) -->
+    <item name="tab_home" type="id" />
+    <item name="tab_adhan" type="id" />
+    <item name="tab_days" type="id" />
+    <item name="tab_qibla" type="id" />
+    <item name="tab_duas" type="id" />
+</resources>

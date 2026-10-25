@@ -18,8 +18,10 @@ aapt package -f -m --auto-add-overlay \
 
 echo "2/5 Java derleme (javac)"
 find "$APP/java" "$OUT/gen" -name '*.java' > "$OUT/sources.txt"
-javac -nowarn -encoding UTF-8 -source 8 -target 8 -Xlint:-options \
-  -bootclasspath "$ANDROID_JAR" -d "$OUT/classes" @"$OUT/sources.txt"
+# --release 8: java.* sınıfları JDK'nin Java 8 imzalarından, android.* sınıfları ANDROID_JAR'dan gelir.
+# (Hem SDK'daki android.jar hem de Robolectric android-all jar'ı ile çalışır.)
+javac -nowarn -encoding UTF-8 --release 8 -Xlint:-options \
+  -cp "$ANDROID_JAR" -d "$OUT/classes" @"$OUT/sources.txt"
 
 echo "3/5 Dex (dx)"
 dalvik-exchange --dex --min-sdk-version=24 --output="$OUT/classes.dex" "$OUT/classes"

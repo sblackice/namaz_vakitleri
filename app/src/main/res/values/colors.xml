@@ -9,4 +9,12 @@
     <color name="accent">#0B5D3B</color>
     <color name="accent_dark">#07462C</color>
     <color name="on_accent">#FFFFFF</color>
+    <!-- Kapalı düğme, uyarı ve kıble seccadesi renkleri -->
+    <color name="off">#5F5F5F</color>
+    <color name="off_dark">#454545</color>
+    <color name="warn">#A11D1D</color>
+    <color name="accent_soft">#E4F1E9</color>
+    <color name="gold">#C9971C</color>
+    <color name="rug">#8E1B1B</color>
+    <color name="rug_dark">#5E1010</color>
 </resources>

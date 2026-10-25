@@ -3,18 +3,18 @@
     android:id="@+id/qibla_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
     android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
         style="@style/Title"
+        android:layout_marginBottom="2dp"
         android:text="@string/qibla_title" />
 
     <TextView
         android:id="@+id/qibla_angle"
         style="@style/Body"
-        android:textStyle="bold" />
+        android:textSize="19sp" />
 
     <tr.kolay.namazvakti.QiblaView
         android:id="@+id/qibla_view"
@@ -27,18 +27,11 @@
         style="@style/Body"
         android:gravity="center"
         android:textColor="@color/accent"
-        android:textSize="25sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <TextView
         style="@style/Note"
         android:layout_marginTop="4dp"
         android:text="@string/qibla_help" />
-
-    <Button
-        android:id="@+id/btn_qibla_back"
-        style="@style/BigButton"
-        android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:text="@string/btn_back" />
 </LinearLayout>
