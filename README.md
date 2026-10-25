@@ -73,4 +73,5 @@ ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
 - `tools/robotest` — 31 otomatik test; ekran görüntülerini `docs/ekran-goruntuleri` içine yazar.
 - `tools/referans_uret.js` — adhan kütüphanesinden karşılaştırma verisi üretir.
 - `tools/axt-shim` — Google Maven'e erişilemeyen ortamda Robolectric için `androidx.test` monitor kütüphanesini kaynak koddan derler.
-- `RAPOR.md` — iki rakip uygulamanın (Ezan Vakti Pro, Namaz Vakitleri) ilk analiz raporu.
+- `tools/ekran_vakit_karsilastir.js` — Ezan Vakti Pro tanıtım görselindeki vakitleri adhan kütüphanesinin yöntemleriyle karşılaştırır.
+- `RAPOR.md` — rakip uygulamaların (Ezan Vakti Pro, Namaz Vakitleri) analiz raporu (2. sürüm).
