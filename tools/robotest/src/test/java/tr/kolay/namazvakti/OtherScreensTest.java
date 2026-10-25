@@ -159,7 +159,7 @@ public class OtherScreensTest {
         // Telefon Kıble'nin 30° solunu gösteriyor: sağa dönmesi söylenir.
         page.onSensorChanged(headingEvent(rv, r.qibla - 30, decl));
         assertFalse(v.aligned());
-        assertEquals("Sağa doğru dönün ↻", state.getText().toString());
+        assertEquals("Sağa doğru dönün ↻ (30°)", state.getText().toString());
         TestUtil.screenshot(a, "6-kible");
 
         // Yeni sayfa açılışında yumuşatma sıfırlanır; telefon Kıble'ye dönük.
@@ -167,9 +167,9 @@ public class OtherScreensTest {
         page.onShow();
         page.onSensorChanged(headingEvent(rv, r.qibla + 2, decl));
         assertTrue("5 dereceden yakınsa hizalı sayılır", v.aligned());
-        assertEquals("✔ Kıble yönündesiniz.", state.getText().toString());
+        assertEquals("✓ Kıble yönündesiniz.", state.getText().toString());
         TestUtil.screenshot(a, "6b-kible-hizali");
-        assertEquals("Sola doğru dönün ↺", QiblaPage.turnHint(300f));
+        assertEquals("Sola doğru dönün ↺ (60°)", QiblaPage.turnHint(300f));
 
         a.findViewById(R.id.tab_home).performClick();
         assertFalse("sayfadan çıkınca pusula kapanmalı", shadowOf(sm).hasListener(page));
@@ -193,7 +193,9 @@ public class OtherScreensTest {
         Intent next = shadowOf(a).getNextStartedActivity();
         assertEquals(DayDetailActivity.class.getName(), next.getComponent().getClassName());
         DayDetailActivity d = Robolectric.buildActivity(DayDetailActivity.class, next).setup().get();
-        assertEquals("Miraç Kandili", ((TextView) d.findViewById(R.id.detail_name)).getText().toString());
+        assertEquals("MİRAÇ KANDİLİ", ((TextView) d.findViewById(R.id.header_title)).getText().toString());
+        d.findViewById(R.id.header_action).performClick();
+        assertTrue("Geri düğmesi sayfayı kapatmalı", d.isFinishing());
         String date = ((TextView) d.findViewById(R.id.detail_date)).getText().toString();
         String info = ((TextView) d.findViewById(R.id.detail_text)).getText().toString();
         System.out.println("Detay: " + date + " | " + info.substring(0, 80));

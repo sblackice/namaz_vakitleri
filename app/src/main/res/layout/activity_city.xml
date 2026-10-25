@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/city_root"
+    android:id="@+id/city_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_header" />
+
+<LinearLayout
+    android:id="@+id/city_root"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
     android:orientation="vertical"
     android:padding="16dp">
-
-    <TextView
-        style="@style/Title"
-        android:text="@string/city_title" />
 
     <Button
         android:id="@+id/btn_find_me"
@@ -53,4 +58,5 @@
         android:layout_width="match_parent"
         android:layout_marginTop="8dp"
         android:text="@string/btn_back" />
+</LinearLayout>
 </LinearLayout>

@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Yüksek kontrast: koyu yazı, açık zemin, koyu yeşil vurgu -->
+    <!-- Yüksek kontrast: koyu yazı, açık zemin, turkuaz vurgu.
+         accent (#11979A) üzerinde beyaz yazı 3,55:1 (yalnızca büyük/kalın yazı için);
+         accent_text (#0A7275) açık zeminde 5,6:1. -->
     <color name="bg">#FFFDF7</color>
     <color name="surface">#FFFFFF</color>
     <color name="border">#C9C3B6</color>
     <color name="text_main">#141414</color>
     <color name="text_past">#555555</color>
-    <color name="accent">#0B5D3B</color>
-    <color name="accent_dark">#07462C</color>
+    <color name="accent">#11979A</color>
+    <color name="accent_dark">#0A7275</color>
+    <color name="accent_text">#0A7275</color>
     <color name="on_accent">#FFFFFF</color>
     <!-- Kapalı düğme, uyarı ve kıble seccadesi renkleri -->
     <color name="off">#5F5F5F</color>
     <color name="off_dark">#454545</color>
     <color name="warn">#A11D1D</color>
-    <color name="accent_soft">#E4F1E9</color>
+    <color name="accent_soft">#E3F4F4</color>
+    <color name="header_bg">#EAF7F7</color>
+    <color name="navy">#101F39</color>
+    <color name="title_dark">#075457</color>
+    <color name="minaret">#3F6466</color>
     <color name="gold">#C9971C</color>
     <color name="rug">#8E1B1B</color>
     <color name="rug_dark">#5E1010</color>

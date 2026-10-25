@@ -6,25 +6,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
- * Ana Sayfa: sıradaki vakte kalan süre (saat:dakika:saniye), bugünün 6 vakti ve aşağıda
+ * Ana Sayfa: sıradaki vakte kalan süre (saat:dakika:saniye), bugünün 6 vakti (ekrana sığacak
+ * yükseklikte) ve aşağıda
  * her gün değişen "Günün Hadisi".
  */
 final class HomePage extends Page {
     private final TextView[] nameViews = new TextView[PrayerCalc.COUNT];
     private final TextView[] timeViews = new TextView[PrayerCalc.COUNT];
     private final View[] rowViews = new View[PrayerCalc.COUNT];
-    private final TextView placeView, dateView, hijriView, nextLabel, countdown, nextTimeView;
-    private final TextView hadithText, hadithNarrator, hadithSource;
+    private final TextView dateView, hijriView, nextLabel, countdown, nextTimeView;
+    private final TextView hadithText, hadithNarrator, hadithSource, scrollHint;
     private final View noPlaceBox, timesBox;
+    private final LinearLayout rowsBox;
+    private final ScrollView scroll;
     private long nextAt;
     private int hadithIndex = -1;
 
     HomePage(MainActivity a, ViewGroup parent) {
         super(a, parent, R.layout.page_home);
-        placeView = (TextView) view.findViewById(R.id.place);
         dateView = (TextView) view.findViewById(R.id.date);
         hijriView = (TextView) view.findViewById(R.id.hijri);
         nextLabel = (TextView) view.findViewById(R.id.next_label);
@@ -35,8 +38,11 @@ final class HomePage extends Page {
         hadithSource = (TextView) view.findViewById(R.id.hadith_source);
         noPlaceBox = view.findViewById(R.id.no_place_box);
         timesBox = view.findViewById(R.id.times_box);
+        scrollHint = (TextView) view.findViewById(R.id.scroll_hint);
+        scroll = (ScrollView) view.findViewById(R.id.home_scroll);
 
         LinearLayout rows = (LinearLayout) view.findViewById(R.id.rows);
+        rowsBox = rows;
         LayoutInflater inf = a.getLayoutInflater();
         for (int i = 0; i < PrayerCalc.COUNT; i++) {
             View row = inf.inflate(R.layout.row_prayer, rows, false);
@@ -52,22 +58,61 @@ final class HomePage extends Page {
                 activity.startActivity(new Intent(activity, CityActivity.class));
             }
         };
-        view.findViewById(R.id.btn_city).setOnClickListener(openCity);
         view.findViewById(R.id.btn_choose_place).setOnClickListener(openCity);
-        placeView.setOnClickListener(openCity);
+        Ui.headerAction(view, R.drawable.ic_pin, "Değiştir", openCity);
+
+        // Ekran boyu değişince (ilk açılış, yazı boyutu) vakit satırları ekrana sığdırılır.
+        scroll.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override public void onLayoutChange(View v, int l, int t, int r, int b,
+                    int ol, int ot, int or, int ob) {
+                if (b - t != ob - ot) fitRows();
+            }
+        });
+    }
+
+    /**
+     * Günün 6 vakti ilk ekranda tam görünsün: satır yüksekliği, kalan boşluğa göre hesaplanır.
+     * Satır, yazının sığacağı en küçük yükseklikten daha kısa yapılmaz (o zaman sayfa kayar).
+     */
+    void fitRows() {
+        int h = scroll.getHeight();
+        if (h == 0 || timesBox.getVisibility() != View.VISIBLE) return;
+        float d = activity.getResources().getDisplayMetrics().density;
+        int top = rowsBox.getTop() + timesBox.getTop();
+        LinearLayout.LayoutParams hintLp = (LinearLayout.LayoutParams) scrollHint.getLayoutParams();
+        int hint = scrollHint.getHeight() + hintLp.topMargin;
+        int gap = Math.round(5 * d);
+        int each = (h - top - hint - Math.round(4 * d)) / PrayerCalc.COUNT - gap;
+        int min = Math.round(Math.max(timeViews[0].getTextSize(), nameViews[0].getTextSize()) * 1.15f
+                + 6 * d);
+        int max = Math.round(80 * d);
+        each = Math.max(min, Math.min(max, each));
+        boolean changed = false;
+        for (View row : rowViews) {
+            ViewGroup.LayoutParams lp = row.getLayoutParams();
+            if (lp.height != each) {
+                lp.height = each;
+                row.setLayoutParams(lp);
+                changed = true;
+            }
+        }
+        if (changed) rowsBox.requestLayout();
     }
 
     @Override
     void onShow() {
         fitCountdown();
         refresh();
+        scroll.post(new Runnable() {
+            @Override public void run() { fitRows(); }
+        });
     }
 
     /** Geri sayım her yazı boyutunda tek satıra sığsın: gerekirse yazıyı küçültür. */
     private void fitCountdown() {
         float density = activity.getResources().getDisplayMetrics().density;
-        // Sayfa kenar boşluğu (2 x 16dp) ve kutunun iç boşluğu (2 x 14dp) çıkarılır.
-        float avail = activity.getResources().getDisplayMetrics().widthPixels - 60 * density;
+        // Sayfa kenar boşluğu (2 x 14dp) ve kutunun iç boşluğu (2 x 10dp) çıkarılır.
+        float avail = activity.getResources().getDisplayMetrics().widthPixels - 52 * density;
         float w = countdown.getPaint().measureText("00:00:00");
         if (w > avail) {
             countdown.setTextSize(TypedValue.COMPLEX_UNIT_PX, countdown.getTextSize() * avail / w * 0.97f);
@@ -92,11 +137,12 @@ final class HomePage extends Page {
         noPlaceBox.setVisibility(has ? View.GONE : View.VISIBLE);
         timesBox.setVisibility(has ? View.VISIBLE : View.GONE);
         if (!has) {
+            Ui.header(view, "Kolay Namaz Vakti", "Hoş geldiniz");
             nextAt = 0;
             return;
         }
 
-        placeView.setText(Prefs.placeName(activity));
+        Ui.header(view, "Türkiye", Prefs.placeName(activity));
         dateView.setText(Times.dateLine(activity, now));
         String hijri = Times.hijriLine(activity, now);
         hijriView.setText(hijri);

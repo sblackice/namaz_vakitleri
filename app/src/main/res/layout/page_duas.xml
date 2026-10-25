@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/duas_page"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     <LinearLayout
         android:id="@+id/duas_root"
@@ -9,10 +18,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
-
-        <TextView
-            style="@style/Title"
-            android:text="@string/duas_title" />
 
         <TextView
             style="@style/Body"
@@ -29,4 +34,5 @@
             style="@style/Note"
             android:text="@string/duas_note" />
     </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

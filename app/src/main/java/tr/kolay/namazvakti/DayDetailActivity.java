@@ -24,7 +24,11 @@ public class DayDetailActivity extends Activity {
         TimeZone tz = Times.tz(this);
         long now = Clock.now();
 
-        ((TextView) findViewById(R.id.detail_name)).setText(g.ad);
+        View page = findViewById(R.id.day_page);
+        Ui.header(page, "Dini Gün ve Geceler", g.ad);
+        Ui.headerAction(page, R.drawable.ic_back, "Geri", new View.OnClickListener() {
+            @Override public void onClick(View v) { finish(); }
+        });
         ((TextView) findViewById(R.id.detail_date)).setText(dateText(g));
         ((TextView) findViewById(R.id.detail_hijri)).setText("Hicri: " + g.hicri);
         ((TextView) findViewById(R.id.detail_left)).setText(DaysPage.leftText(g, now, tz));
@@ -34,10 +38,7 @@ public class DayDetailActivity extends Activity {
         src.setText(b.kaynak.length() == 0 ? "" : "Kaynak: " + b.kaynak);
         src.setVisibility(b.kaynak.length() == 0 ? View.GONE : View.VISIBLE);
         ((TextView) findViewById(R.id.detail_note)).setText(DiniGunler.TARIH_KAYNAGI);
-        findViewById(R.id.btn_day_back).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { finish(); }
-        });
-        Ui.scaleText(findViewById(R.id.day_root), Prefs.textScale(this));
+        Ui.scaleText(page, Prefs.textScale(this));
     }
 
     static String dateText(DiniGunler.Gun g) {

@@ -19,6 +19,7 @@ final class DaysPage extends Page {
 
     DaysPage(MainActivity a, ViewGroup parent) {
         super(a, parent, R.layout.page_days);
+        Ui.header(view, "Kolay Namaz Vakti", "Dini Gün ve Geceler");
         list = (LinearLayout) view.findViewById(R.id.days_list);
         ((TextView) view.findViewById(R.id.days_note)).setText(DiniGunler.TARIH_KAYNAGI);
     }

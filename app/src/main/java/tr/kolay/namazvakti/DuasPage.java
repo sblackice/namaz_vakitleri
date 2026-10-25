@@ -10,6 +10,7 @@ import android.widget.TextView;
 final class DuasPage extends Page {
     DuasPage(MainActivity a, ViewGroup parent) {
         super(a, parent, R.layout.page_duas);
+        Ui.header(view, "Kolay Namaz Vakti", "Namazda Okunan Dualar");
         LinearLayout list = (LinearLayout) view.findViewById(R.id.duas_list);
         LayoutInflater inf = a.getLayoutInflater();
         String section = null;

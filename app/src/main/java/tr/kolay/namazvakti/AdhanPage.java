@@ -41,6 +41,7 @@ final class AdhanPage extends Page {
 
     AdhanPage(MainActivity a, ViewGroup parent) {
         super(a, parent, R.layout.page_adhan);
+        Ui.header(view, "Kolay Namaz Vakti", "Ezan ve İzinler");
         LayoutInflater inf = a.getLayoutInflater();
 
         LinearLayout rows = (LinearLayout) view.findViewById(R.id.adhan_rows);
@@ -227,7 +228,7 @@ final class AdhanPage extends Page {
         View row = permRows[i];
         TextView state = (TextView) row.findViewById(R.id.perm_state);
         state.setText(ok ? "✔ " + okText : "✖ " + badText);
-        state.setTextColor(activity.getColor(ok ? R.color.accent : R.color.warn));
+        state.setTextColor(activity.getColor(ok ? R.color.accent_text : R.color.warn));
         ((TextView) row.findViewById(R.id.perm_why)).setText(why);
         Button b = (Button) row.findViewById(R.id.perm_button);
         b.setText(action);

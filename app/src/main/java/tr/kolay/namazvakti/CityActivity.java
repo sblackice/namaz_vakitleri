@@ -53,6 +53,7 @@ public class CityActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
+        Ui.header(findViewById(R.id.city_page), "Kolay Namaz Vakti", getString(R.string.city_title));
         status = (TextView) findViewById(R.id.city_status);
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

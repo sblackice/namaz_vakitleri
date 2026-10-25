@@ -33,7 +33,7 @@
     <string name="sound_note">Ezan kaydı telif hakları nedeniyle uygulamaya eklenmedi. Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa “Ezan Ses Dosyası Seç” ile seçebilirsiniz. Seçilen ezan, telefonun ALARM ses seviyesinde çalar; bildirimdeki “Durdur” ile susturulur.</string>
     <string name="remind_title">Vakitten önce hatırlatma</string>
     <string name="perm_title">İzinler</string>
-    <string name="perm_intro">Ezanın zamanında okunması için aşağıdakilerin hepsi yeşil (✔) olmalı. Kırmızı olanın altındaki düğmeye dokunun.</string>
+    <string name="perm_intro">Ezanın zamanında okunması için aşağıdakilerin hepsi turkuaz (✔) olmalı. Kırmızı olanın altındaki düğmeye dokunun.</string>
     <string name="other_title">Diğer ayarlar</string>
     <string name="more_settings">Yazı Boyutu ve Vakit Düzeltme</string>
     <string name="battery_note">Bazı telefonlarda (özellikle Xiaomi, Huawei, Samsung) pil tasarrufu ezanı geciktirebilir. Uygulamayı “Zorla durdur” yaparsanız ezan, uygulamayı tekrar açana kadar okunmaz.</string>
@@ -44,7 +44,7 @@
 
     <!-- Kıble -->
     <string name="qibla_title">Kıble Pusulası</string>
-    <string name="qibla_help">Telefonu masaya koyar gibi düz tutun ve yavaşça dönün. Seccadenin üzerindeki ok, en üstteki yeşil işaretle aynı hizaya gelince Kıble\'ye dönmüş olursunuz. Metal eşyalardan ve mıknatıslardan uzak durun.</string>
+    <string name="qibla_help">Telefonu masaya koyar gibi düz tutun ve yavaşça dönün. Seccadenin üzerindeki ok, en üstteki turkuaz işaretle aynı hizaya gelince Kıble\'ye dönmüş olursunuz. Metal eşyalardan ve mıknatıslardan uzak durun.</string>
 
     <!-- Dualar -->
     <string name="duas_title">Namazda Okunan Dualar</string>

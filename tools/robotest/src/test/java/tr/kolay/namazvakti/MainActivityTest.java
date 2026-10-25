@@ -78,8 +78,8 @@ public class MainActivityTest {
                     shown.equals(ref) || shown.equals(refMinus) || shown.equals(refPlus));
             System.out.println("Ankara 15.10.2026 " + Times.NAMES[i] + ": ekranda " + shown
                     + " | adhan: " + ref);
-            assertTrue("vakit yazısı büyük olmalı", TestUtil.sp(time) >= 40f);
-            assertTrue("vakit adı büyük olmalı", TestUtil.sp(name) >= 30f);
+            assertTrue("vakit yazısı büyük olmalı", TestUtil.sp(time) >= 30f);
+            assertTrue("vakit adı büyük olmalı", TestUtil.sp(name) >= 22f);
         }
         String next = ((TextView) a.findViewById(R.id.next_label)).getText().toString();
         String count = ((TextView) a.findViewById(R.id.countdown)).getText().toString();
@@ -87,8 +87,12 @@ public class MainActivityTest {
         assertTrue(next, next.contains("ÖĞLE"));
         assertTrue("saat:dakika:saniye olmalı: " + count, count.matches("\\d\\d:\\d\\d:\\d\\d"));
         assertEquals(Times.hms(r.t[PrayerCalc.OGLE] - Clock.now()).substring(0, 5), count.substring(0, 5));
-        assertTrue("geri sayım büyük olmalı", TestUtil.sp((TextView) a.findViewById(R.id.countdown)) >= 60f);
-        assertEquals("Ankara", ((TextView) a.findViewById(R.id.place)).getText().toString());
+        assertTrue("geri sayım büyük olmalı", TestUtil.sp((TextView) a.findViewById(R.id.countdown)) >= 50f);
+        View home = a.page(MainActivity.HOME).view;
+        assertEquals("ANKARA", ((TextView) home.findViewById(R.id.header_title)).getText().toString());
+        assertEquals("TÜRKİYE", ((TextView) home.findViewById(R.id.header_caption)).getText().toString());
+        TestUtil.layout(a);
+        assertAllRowsVisible(a);
         String hijri = ((TextView) a.findViewById(R.id.hijri)).getText().toString();
         System.out.println("Tarih: " + ((TextView) a.findViewById(R.id.date)).getText() + " / " + hijri);
         assertTrue(hijri, hijri.contains("Hicri"));
@@ -112,7 +116,7 @@ public class MainActivityTest {
         MainActivity a = start();
         TextView time = (TextView) ((LinearLayout) a.findViewById(R.id.rows)).getChildAt(0)
                 .findViewById(R.id.row_time);
-        assertTrue(TestUtil.sp(time) >= 55f);
+        assertTrue(TestUtil.sp(time) >= 45f);
         TestUtil.layout(a);
         assertEquals("geri sayım tek satır olmalı", 1,
                 ((TextView) a.findViewById(R.id.countdown)).getLineCount());
@@ -187,8 +191,36 @@ public class MainActivityTest {
         a.findViewById(R.id.tab_duas).performClick();
         assertEquals(MainActivity.DUAS, a.currentTab());
         assertEquals(View.VISIBLE, a.findViewById(R.id.duas_root).getVisibility());
-        assertEquals(View.GONE, ((View) a.findViewById(R.id.root).getParent()).getVisibility());
+        assertEquals(View.GONE, a.findViewById(R.id.home_page).getVisibility());
         a.onBackPressed();
         assertEquals(MainActivity.HOME, a.currentTab());
+    }
+
+    @Test
+    @Config(qualifiers = "w360dp-h700dp-xhdpi")
+    public void kucukEkrandaDaVakitlerTamGorunur() throws Exception {
+        TestUtil.setCity(app, "İstanbul");
+        MainActivity a = start();
+        TestUtil.layout(a);
+        assertAllRowsVisible(a);
+        int[] nav = new int[2], hint = new int[2];
+        a.findViewById(R.id.bottom_nav).getLocationInWindow(nav);
+        View h = a.findViewById(R.id.scroll_hint);
+        h.getLocationInWindow(hint);
+        assertTrue("'aşağı kaydırın' yazısı da yarım kalmamalı", hint[1] + h.getHeight() <= nav[1]);
+        TestUtil.screenshot(a, "1c-ana-ekran-kucuk-telefon");
+    }
+
+    /** Günün 6 vakti, alt menünün üstünde, kaydırmadan tam görünmeli. */
+    static void assertAllRowsVisible(MainActivity a) {
+        LinearLayout rows = (LinearLayout) a.findViewById(R.id.rows);
+        int[] nav = new int[2], row = new int[2];
+        a.findViewById(R.id.bottom_nav).getLocationInWindow(nav);
+        View last = rows.getChildAt(PrayerCalc.COUNT - 1);
+        last.getLocationInWindow(row);
+        int bottom = row[1] + last.getHeight();
+        System.out.println("Yatsı satırının altı: " + bottom + " px, alt menünün üstü: " + nav[1] + " px, satır: "
+                + last.getHeight() + " px");
+        assertTrue("Yatsı satırı ekrana tam sığmalı", bottom <= nav[1]);
     }
 }

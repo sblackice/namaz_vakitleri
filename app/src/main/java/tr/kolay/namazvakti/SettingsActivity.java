@@ -17,6 +17,7 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        Ui.header(findViewById(R.id.settings_page), "Kolay Namaz Vakti", "Diğer Ayarlar");
         scaleBtn = (Button) findViewById(R.id.btn_scale);
         scaleBtn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
