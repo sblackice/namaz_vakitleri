@@ -43,17 +43,34 @@ final class Prefs {
         sp(c).edit().putBoolean("adhan" + i, on).apply();
     }
 
-    /** Kullanıcının seçtiği ezan ses dosyası (yoksa null: telefonun bildirim sesi çalar). */
-    static String adhanUri(Context c) { return sp(c).getString("adhanUri", null); }
+    /**
+     * Çalınacak ezan sesi. Hiç seçim yapılmadıysa uygulamanın içindeki ilk hazır ezan.
+     * null: kullanıcı "telefonun bildirim sesi" seçmiş (veya hazır ezan yok).
+     */
+    static String adhanUri(Context c) {
+        if (!sp(c).contains("adhanUri")) {
+            java.util.List<Ezanlar.Ezan> h = Ezanlar.mevcut(c);
+            return h.isEmpty() ? null : h.get(0).uri(c);
+        }
+        String v = sp(c).getString("adhanUri", "");
+        return v.length() == 0 ? null : v;
+    }
 
-    static String adhanName(Context c) { return sp(c).getString("adhanName", ""); }
+    static String adhanName(Context c) {
+        if (!sp(c).contains("adhanUri")) {
+            java.util.List<Ezanlar.Ezan> h = Ezanlar.mevcut(c);
+            return h.isEmpty() ? "" : h.get(0).ad;
+        }
+        return sp(c).getString("adhanName", "");
+    }
 
     static void setAdhanSound(Context c, String uri, String name) {
         sp(c).edit().putString("adhanUri", uri).putString("adhanName", name).apply();
     }
 
+    /** Ezan yerine telefonun bildirim sesi çalsın. */
     static void clearAdhanSound(Context c) {
-        sp(c).edit().remove("adhanUri").remove("adhanName").apply();
+        sp(c).edit().putString("adhanUri", "").remove("adhanName").apply();
     }
 
     /** Telefon sessiz veya titreşimdeyken ezan sesi çalınmasın mı? */

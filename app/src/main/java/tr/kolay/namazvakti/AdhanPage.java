@@ -171,7 +171,8 @@ final class AdhanPage extends Page {
             soundState.setText("Şu an: seçtiğiniz ezan çalar" + (n.length() > 0 ? " (" + n + ")" : "")
                     + ".");
         }
-        pickBtn.setText(uri == null ? "Ezan Ses Dosyası Seç" : "Başka Ezan Dosyası Seç");
+        pickBtn.setText(uri == null || Ezanlar.hazirMi(uri) ? "Telefondan Ezan Dosyası Seç"
+                : "Başka Ezan Dosyası Seç");
         testBtn.setVisibility(uri == null ? View.GONE : View.VISIBLE);
         defaultBtn.setVisibility(uri == null ? View.GONE : View.VISIBLE);
         quietBtn.setVisibility(uri == null ? View.GONE : View.VISIBLE);

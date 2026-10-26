@@ -9,6 +9,20 @@ Reklam ve takip yoktur. İnternet yalnızca **Menü → En Yakın Cami** sayfas�
 <img src="docs/ekran-goruntuleri/11-menu.png" width="200"> <img src="docs/ekran-goruntuleri/12-zikirmatik.png" width="200"> <img src="docs/ekran-goruntuleri/13-esmaul-husna.png" width="200"> <img src="docs/ekran-goruntuleri/13b-esmaul-husna-detay.png" width="200"> <img src="docs/ekran-goruntuleri/16-en-yakin-cami.png" width="200">
 <img src="docs/ekran-goruntuleri/14-renk-temasi.png" width="200"> <img src="docs/ekran-goruntuleri/15a-tema-beyaz-kirmizi.png" width="200"> <img src="docs/ekran-goruntuleri/15b-tema-pudra-yesil.png" width="200"> <img src="docs/ekran-goruntuleri/15d-tema-siyah-beyaz.png" width="200"> <img src="docs/ekran-goruntuleri/15e-tema-siyah-kirmizi.png" width="200">
 
+## 2.3 sürümünde neler değişti?
+
+- **973 ilçe eklendi.** Şehir seçerken önce ile, sonra ilçeye dokunun (ör. Mersin → Anamur). Arama kutusu ilçe de bulur
+  ("kadıköy" yazınca "Kadıköy – İstanbul"). Vakitler ilçenin kendi konumuna göre hesaplanır; örneğin Anamur'da öğle,
+  Mersin merkezinden 7 dakika sonradır. "Konumumu Otomatik Bul" da artık en yakın ilçenin adını yazar.
+  - İlçe listesi: npm `turkey-neighbourhoods` 4.0.3 (MIT). Koordinatlar: GeoNames (CC BY 4.0, npm `cities.json` 1.1.65).
+    858 ilçe GeoNames'teki ilçe merkezinden; 12 ilçe Vikipedi'deki koordinattan (GeoNames'te eksik ya da aynı adlı
+    başka bir köye düşenler: ör. Kadıköy, Sincan, Kartal, Derecik); büyükşehirlerin şehir içindeki 39 ilçesi ve
+    "Merkez" ilçeleri il merkezinden (il merkezine 10-15 km; vakit farkı 1 dakikanın altında) alındı. 790 ilçe ikinci
+    bir GeoNames kopyasıyla karşılaştırıldı (`tools/ilce_koordinat_uret.py`).
+- **3 hazır ezan sesi eklendi** (depo sahibinin verdiği kayıtlar: 30, 17 ve 17 saniye). İlk kurulumda **Ezan 1** seçilidir;
+  yani ses seçmeseniz de vakit girince ezan okunur. Ezan sayfasından diğerleri, telefondan bir dosya veya telefonun
+  bildirim sesi seçilebilir. Bu kayıtların kaynağı, okuyanı, makamı ve lisansı dosyalarda yazmıyor; **doğrulanmadı**.
+
 ## 2.2 sürümünde neler değişti?
 
 - **Alt menünün en sağına "Menü" düğmesi** eklendi. Dokununca yukarı doğru bir panel açılır:
@@ -70,7 +84,7 @@ Reklam ve takip yoktur. İnternet yalnızca **Menü → En Yakın Cami** sayfas�
 **Gereken:** Android 7.0 veya daha yeni bir telefon.
 
 APK dosyasının SHA-256 özeti (dosyanın bozulmadığını kontrol etmek isteyenler için):
-`cf8032880b94941b8b7e16e3f684f5684ab476ad6de28f21e6a8dbbb1e810876`
+`e9540159008f0215cfbf0bd3b4ede3f71f41438b3bc52ac70e338ba7f4a0e3c0`
 
 ## Neler var?
 
@@ -89,7 +103,7 @@ Ayrıca: ana ekran bileşeni (widget), telefon yeniden açılınca alarmların k
 
 ## Ezan sesi nasıl seçilir?
 
-Bu sürümde uygulamanın içinde **hazır ezan kaydı yoktur.** Seçmezseniz vakit girince telefonun bildirim sesi çalar.
+Uygulamada **3 hazır ezan sesi** vardır (2.3 sürümü); ilk kurulumda Ezan 1 seçilidir. Aşağıdaki not, 2.2 sürümündeki araştırmadır.
 
 Telifsiz (özgür lisanslı) ezan kaydı arandı. Bulunanlar (Wikimedia Commons):
 [Beautiful adhan.ogg](https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg) (arama sonucuna göre CC0, 2 dk 34 sn) ve
@@ -122,15 +136,15 @@ Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa:
 
 ## Bilinen sınırlamalar
 
-- Hazır ezan kaydı yoktur (yukarıya bakın). Kendi ses dosyanızı seçebilirsiniz; seçmezseniz bildirim sesi çalar.
+- Hazır ezan kayıtları kısadır (17-30 saniye) ve lisansları doğrulanmamıştır.
 - **Google Play'e yüklenecekse:** uygulama "tam vaktinde alarm" için `USE_EXACT_ALARM` iznini kullanır. Google Play bu izni yalnızca ana işi
   alarm/takvim olan uygulamalara verir; namaz vakti uygulaması için kabul edilip edilmeyeceği **belli değildir**. Play'e yüklemeden önce
   `AndroidManifest.xml`'den `USE_EXACT_ALARM` satırını silip `SCHEDULE_EXACT_ALARM` satırındaki `maxSdkVersion` kısmını kaldırın; uygulama
   bu durumda kullanıcıdan izni Ezan sayfasındaki "İzin Ver" düğmesiyle ister (Android 14'te bu izin varsayılan olarak kapalıdır).
   APK'yı kendiniz kuruyorsanız bir şey yapmanız gerekmez.
 - En Yakın Cami sayfası internet ve (isterseniz) konum ister. Konum izni verilmezse seçili şehrin merkezine göre arar.
-- İl merkezi seçildiğinde vakitler il merkezine göredir; ilçelerde birkaç dakika fark olabilir. "Konumumu Otomatik Bul" kullanılırsa
-  vakitler tam bulunduğunuz yere göre hesaplanır.
+- İl merkezi seçilirse vakitler il merkezine göredir; ilçede yaşıyorsanız ilçenizi seçin. Büyükşehirlerin şehir içindeki
+  ilçeleri il merkezinin koordinatını kullanır (fark 1 dakikanın altında).
 - Android 12 ve üzerinde, telefon pil tasarrufundayken sistem, seçtiğiniz ezan sesinin arka planda başlatılmasına izin vermeyebilir.
   Bu durumda uygulama otomatik olarak bildirim sesine geçer. Bunun hangi telefonlarda ve ne sıklıkla olduğunu **doğrulayamadım**;
   Ezan sayfasındaki **Pil tasarrufu** satırından kısıtlamayı kaldırmanız önerilir.
@@ -153,7 +167,7 @@ Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa:
 #   https://repo1.maven.org/maven2/org/robolectric/android-all/14-robolectric-10818077/
 ANDROID_JAR=/yol/android-all-14-robolectric-10818077.jar ./build.sh     # → build/KolayNamazVakti.apk
 
-# Otomatik testler (telefon gerekmez, Robolectric ile; 77 test, ekran görüntülerini de üretir):
+# Otomatik testler (telefon gerekmez, Robolectric ile; 81 test, ekran görüntülerini de üretir):
 ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
 # Esmâ-ül Hüsnâ yazı tipi: npm @expo-google-fonts/aref-ruqaa 0.4.1 → assets/fonts (SIL OFL 1.1)
 ```
@@ -168,6 +182,7 @@ ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
 - `tools/robotest` — otomatik testler; ekran görüntülerini `docs/ekran-goruntuleri` içine yazar.
 - `tools/hadis_dogrula.py` — Günün Hadisi listesini hadis veritabanıyla karşılaştırır (Ekim 2026'da yeniden çalıştırıldı: 54/54, 0 hata).
 - `tools/hicri_takvim_uret.py` — `HicriTablo.java`'yı Diyanet ölçütüyle üretir, Diyanet'in yayımladığı ay başlarıyla karşılaştırır.
+- `tools/ilce_koordinat_uret.py` — `Ilceler.java`'yı (973 ilçe ve koordinatları) üretir.
 - `tools/esma_uret.py` — `Esma.java`'yı Tirmizî 3507'nin Arapça metninden üretir.
 - `tools/kuran_metni_uret.py` — `KuranMetni.java` dosyasını Kur'an verisinden üretir.
 - `tools/seccade_uret.py` — Kıble sayfasındaki seccade ve Kâbe resimlerini (`res/drawable-nodpi`) kodla çizer (Python + Pillow).

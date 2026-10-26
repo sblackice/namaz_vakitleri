@@ -56,7 +56,7 @@
     <string name="test_sound">▶ Ezanı Dene</string>
     <string name="stop_sound">■ Durdur</string>
     <string name="default_sound">Telefonun Bildirim Sesini Kullan</string>
-    <string name="sound_note">Ezan kaydı telif hakları nedeniyle uygulamaya eklenmedi. Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa “Ezan Ses Dosyası Seç” ile seçebilirsiniz. Seçilen ezan, telefonun ALARM ses seviyesinde çalar; bildirimdeki “Durdur” ile susturulur.</string>
+    <string name="sound_note">Uygulamada 3 hazır ezan sesi vardır; ilk kurulumda Ezan 1 seçilidir. İsterseniz telefonunuzdaki bir ezan dosyasını (ör. MP3) da seçebilirsiniz. Ezan, telefonun ALARM ses seviyesinde çalar; bildirimdeki “Durdur” ile susturulur.</string>
     <string name="remind_title">Vakitten önce hatırlatma</string>
     <string name="perm_title">İzinler</string>
     <string name="perm_intro">Ezanın zamanında okunması için aşağıdakilerin hepsi turkuaz (✔) olmalı. Kırmızı olanın altındaki düğmeye dokunun.</string>
@@ -82,7 +82,7 @@
     <!-- Şehir ve ayarlar -->
     <string name="city_title">Şehrinizi seçin</string>
     <string name="find_me">Konumumu Otomatik Bul</string>
-    <string name="search_hint">Şehir adı yazın…</string>
+    <string name="search_hint">İl veya ilçe adı yazın…</string>
     <string name="settings_title">Diğer Ayarlar</string>
     <string name="offsets_title">Vakit düzeltme (dakika)</string>
     <string name="offsets_body">Vakitler bulunduğunuz yerin takviminden farklıysa her vakit için dakika ekleyip çıkarabilirsiniz.</string>

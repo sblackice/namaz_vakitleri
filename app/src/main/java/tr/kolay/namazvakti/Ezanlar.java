@@ -12,9 +12,9 @@ import java.util.List;
  * Yalnızca telifsiz (kamu malı, CC0) veya özgür lisanslı (ör. CC BY, CC BY-SA) kayıtlar
  * eklenmelidir; lisans ve kaynak "kaynak" alanına yazılır ve ekranda gösterilir.
  *
- * Not (Ekim 2026): Bu sürümde hazır kayıt yoktur. Uygun lisanslı kayıtlar bulundu
- * (README'ye bakın) ama geliştirme ortamından bu sitelere erişim engelli olduğu için
- * dosyalar indirilemedi. Dosya res/raw içinde yoksa o satır ekranda gösterilmez.
+ * Bu sürümdeki 3 kayıt (ezan_1/2/3.mp3, 30, 17 ve 17 saniye) depo sahibi tarafından verildi.
+ * Dosyalarda kaynak, okuyan ve makam bilgisi yoktur; lisansları geliştirici tarafından
+ * doğrulanmadı. Uygulama ilk kurulduğunda Ezan 1 seçili gelir.
  */
 final class Ezanlar {
     private Ezanlar() {}
@@ -35,6 +35,9 @@ final class Ezanlar {
 
     /** dosya adı (uzantısız), ekranda görünen ad, kaynak ve lisans */
     static final Ezan[] LISTE = {
+        new Ezan("ezan_1", "Ezan 1 (30 sn)", "Depo sahibinin verdiği kayıt"),
+        new Ezan("ezan_2", "Ezan 2 (17 sn)", "Depo sahibinin verdiği kayıt"),
+        new Ezan("ezan_3", "Ezan 3 (17 sn)", "Depo sahibinin verdiği kayıt"),
     };
 
     /** Telefonda gerçekten bulunan hazır ezanlar. */

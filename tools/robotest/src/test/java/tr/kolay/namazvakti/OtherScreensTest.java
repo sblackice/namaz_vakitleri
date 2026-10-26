@@ -42,6 +42,7 @@ public class OtherScreensTest {
     public void setUp() {
         app = RuntimeEnvironment.getApplication();
         TestUtil.setCity(app, "Ankara");
+        Prefs.clearAdhanSound(app); // eski davranış: bildirim sesi
         Clock.fixedNow = TestUtil.istanbul(2026, 10, 15, 12, 0);
     }
 

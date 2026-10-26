@@ -46,12 +46,11 @@ public class CityActivityTest {
 
         ((EditText) a.findViewById(R.id.city_search)).setText("izmir");
         ShadowLooper.idleMainLooper();
-        assertEquals(1, list.getAdapter().getCount());
-        assertEquals("İzmir", list.getAdapter().getItem(0));
+        assertEquals("İzmir" + CityActivity.ARROW, list.getAdapter().getItem(0));
 
         ((EditText) a.findViewById(R.id.city_search)).setText("sanliurfa");
         ShadowLooper.idleMainLooper();
-        assertEquals("Şanlıurfa", list.getAdapter().getItem(0));
+        assertEquals("Şanlıurfa" + CityActivity.ARROW, list.getAdapter().getItem(0));
     }
 
     @Test
@@ -60,6 +59,10 @@ public class CityActivityTest {
         ((EditText) a.findViewById(R.id.city_search)).setText("Trabzon");
         ShadowLooper.idleMainLooper();
         ListView list = (ListView) a.findViewById(R.id.city_list);
+        shadowOf(list).performItemClick(0); // ile dokununca ilçeleri açılır
+        assertEquals("Trabzon (il merkezi)", list.getAdapter().getItem(0));
+        assertTrue(list.getAdapter().getCount() > 15);
+        assertTrue(!a.isFinishing());
         shadowOf(list).performItemClick(0);
         assertEquals("Trabzon", Prefs.placeName(app));
         assertEquals(41.005, Prefs.lat(app), 0.01);
@@ -81,7 +84,8 @@ public class CityActivityTest {
 
         CityActivity a = Robolectric.buildActivity(CityActivity.class).setup().get();
         a.findViewById(R.id.btn_find_me).performClick();
-        assertEquals("Konya (konumum)", Prefs.placeName(app));
+        System.out.println("Konum adı: " + Prefs.placeName(app));
+        assertTrue(Prefs.placeName(app), Prefs.placeName(app).endsWith("Konya (konumum)"));
         assertEquals(37.88, Prefs.lat(app), 1e-9);
         assertTrue(a.isFinishing());
     }
@@ -95,5 +99,66 @@ public class CityActivityTest {
         a.onRequestPermissionsResult(7, asked, new int[] {-1, -1});
         String status = ((android.widget.TextView) a.findViewById(R.id.city_status)).getText().toString();
         assertTrue(status, status.contains("izni verilmedi"));
+    }
+
+    @Test
+    public void ilceSecilinceVakitIlceyeGoreHesaplanir() throws Exception {
+        CityActivity a = Robolectric.buildActivity(CityActivity.class).setup().get();
+        ListView list = (ListView) a.findViewById(R.id.city_list);
+        // İl → ilçe: Mersin'e dokun, Anamur'u seç
+        ((EditText) a.findViewById(R.id.city_search)).setText("mersin");
+        ShadowLooper.idleMainLooper();
+        shadowOf(list).performItemClick(0);
+        int anamur = -1;
+        for (int i = 0; i < list.getAdapter().getCount(); i++) {
+            if ("Anamur".equals(list.getAdapter().getItem(i))) anamur = i;
+        }
+        assertTrue("Anamur listede olmalı", anamur > 0);
+        TestUtil.screenshot(a, "4b-ilce-secimi");
+        shadowOf(list).performItemClick(anamur);
+        assertEquals("Anamur, Mersin", Prefs.placeName(app));
+        long[] anamurTimes = Times.forDay(app, Clock.now(), 0);
+
+        TestUtil.setCity(app, "Mersin");
+        long[] mersinTimes = Times.forDay(app, Clock.now(), 0);
+        long diffMin = (anamurTimes[PrayerCalc.OGLE] - mersinTimes[PrayerCalc.OGLE]) / 60000;
+        System.out.println("Öğle: Anamur, Mersin merkezden " + diffMin + " dakika sonra");
+        assertTrue("Anamur 180 km batıda: öğle birkaç dakika geç olmalı", diffMin >= 6 && diffMin <= 9);
+    }
+
+    @Test
+    public void aramaIlceleriDeBulur() {
+        CityActivity a = Robolectric.buildActivity(CityActivity.class).setup().get();
+        ((EditText) a.findViewById(R.id.city_search)).setText("kadikoy");
+        ShadowLooper.idleMainLooper();
+        ListView list = (ListView) a.findViewById(R.id.city_list);
+        int k = -1;
+        for (int i = 0; i < list.getAdapter().getCount(); i++) {
+            if ("Kadıköy – İstanbul".equals(list.getAdapter().getItem(i))) k = i;
+        }
+        assertTrue(k >= 0);
+        shadowOf(list).performItemClick(k);
+        assertEquals("Kadıköy, İstanbul", Prefs.placeName(app));
+        assertEquals(40.99, Prefs.lat(app), 0.02);
+        assertEquals(29.04, Prefs.lon(app), 0.02);
+        assertTrue(a.isFinishing());
+    }
+
+    @Test
+    public void ilceVerisiTutarli() {
+        assertEquals(973, Ilceler.AD.length);
+        assertEquals(973, Ilceler.LAT.length);
+        int[] count = new int[Cities.NAMES.length];
+        for (int k = 0; k < Ilceler.AD.length; k++) {
+            int il = Ilceler.IL[k];
+            count[il]++;
+            assertTrue(Ilceler.AD[k], Ilceler.LAT[k] > 35.8 && Ilceler.LAT[k] < 42.2);
+            assertTrue(Ilceler.AD[k], Ilceler.LON[k] > 25.6 && Ilceler.LON[k] < 44.9);
+            double d = Cities.distanceKm(Ilceler.LAT[k], Ilceler.LON[k], Cities.LAT[il], Cities.LON[il]);
+            assertTrue(Cities.NAMES[il] + "/" + Ilceler.AD[k] + " " + d + " km", d < 200);
+        }
+        for (int i = 0; i < count.length; i++) assertTrue(Cities.NAMES[i], count[i] >= 3);
+        assertEquals(39, count[Cities.indexOf("İstanbul")]);
+        assertEquals(25, count[Cities.indexOf("Ankara")]);
     }
 }
