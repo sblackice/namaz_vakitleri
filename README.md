@@ -6,7 +6,7 @@ Reklam ve takip yoktur. İnternet yalnızca **Menü → En Yakın Cami** sayfas�
 <img src="docs/ekran-goruntuleri/1-ana-ekran.png" width="200"> <img src="docs/ekran-goruntuleri/1b-ana-ekran-gunun-hadisi.png" width="200"> <img src="docs/ekran-goruntuleri/5-ezan-ve-izinler.png" width="200">
 <img src="docs/ekran-goruntuleri/7-dini-gunler.png" width="200"> <img src="docs/ekran-goruntuleri/8-dini-gun-detay.png" width="200"> <img src="docs/ekran-goruntuleri/6-kible.png" width="200"> <img src="docs/ekran-goruntuleri/6b-kible-hizali.png" width="200"> <img src="docs/ekran-goruntuleri/9-dualar.png" width="200">
 
-<img src="docs/ekran-goruntuleri/11-menu.png" width="200"> <img src="docs/ekran-goruntuleri/12-zikirmatik.png" width="200"> <img src="docs/ekran-goruntuleri/13-esmaul-husna.png" width="200"> <img src="docs/ekran-goruntuleri/16-en-yakin-cami.png" width="200">
+<img src="docs/ekran-goruntuleri/11-menu.png" width="200"> <img src="docs/ekran-goruntuleri/12-zikirmatik.png" width="200"> <img src="docs/ekran-goruntuleri/13-esmaul-husna.png" width="200"> <img src="docs/ekran-goruntuleri/13b-esmaul-husna-detay.png" width="200"> <img src="docs/ekran-goruntuleri/16-en-yakin-cami.png" width="200">
 <img src="docs/ekran-goruntuleri/14-renk-temasi.png" width="200"> <img src="docs/ekran-goruntuleri/15a-tema-beyaz-kirmizi.png" width="200"> <img src="docs/ekran-goruntuleri/15b-tema-pudra-yesil.png" width="200"> <img src="docs/ekran-goruntuleri/15d-tema-siyah-beyaz.png" width="200"> <img src="docs/ekran-goruntuleri/15e-tema-siyah-kirmizi.png" width="200">
 
 ## 2.2 sürümünde neler değişti?
@@ -14,8 +14,9 @@ Reklam ve takip yoktur. İnternet yalnızca **Menü → En Yakın Cami** sayfas�
 - **Alt menünün en sağına "Menü" düğmesi** eklendi. Dokununca yukarı doğru bir panel açılır:
   - **En Yakın Cami:** Haritada yakınınızdaki camiler görünür. Bir camiye dokunup **Yol Tarifi**'ne basınca Google Haritalar açılır ve yolu tarif eder.
     Haritanın altında en yakın 10 caminin mesafeli listesi de vardır. Cami bilgileri OpenStreetMap'ten gelir.
-  - **Esmâ-ül Hüsnâ:** Allah'ın 99 ismi: sıra numarası, Arapça yazılışı, Türkçe okunuşu ve kısa anlamı. ▶ düğmesi Arapça okunuşu
-    seslendirir; **Hepsini Sırayla Dinle** 99 ismi arka arkaya okur.
+  - **Esmâ-ül Hüsnâ:** Allah'ın 99 ismi, koyu zemin üzerinde 3 sütunlu kartlarda: altın renkli Arapça isim (açık lisanslı
+    Aref Ruqaa hat yazı tipi) ve altında okunuşu. Bir isme dokununca büyük pencerede anlamı açılır ve Arapçası seslendirilir
+    (‹ › ile önceki/sonraki isim). Sağ alttaki ▶ 99 ismi sırayla okur, sol alttaki **Tesbih** Zikirmatik'i açar.
   - **Zikirmatik:** Ortada büyük bir düğme; etrafında soldan başlayıp üstten dönerek hedefe doğru dolan bir kadran, kadranın sonunda hedef sayı.
     Sağ üstte hedef (dokunup rakam girilir), sol altta **−** ve **+**, sağ altta **Sıfırla** (önce sorar). Hedefe ulaşınca telefon titrer.
     Sayı uygulama kapansa da kaybolmaz; zikir çekerken ekran kararmaz.
@@ -69,7 +70,7 @@ Reklam ve takip yoktur. İnternet yalnızca **Menü → En Yakın Cami** sayfas�
 **Gereken:** Android 7.0 veya daha yeni bir telefon.
 
 APK dosyasının SHA-256 özeti (dosyanın bozulmadığını kontrol etmek isteyenler için):
-`f9a8e9ee0aee85fa47494b757271abb8e70ca79512d51239736ccbd916074043`
+`cf8032880b94941b8b7e16e3f684f5684ab476ad6de28f21e6a8dbbb1e810876`
 
 ## Neler var?
 
@@ -154,6 +155,7 @@ ANDROID_JAR=/yol/android-all-14-robolectric-10818077.jar ./build.sh     # → bu
 
 # Otomatik testler (telefon gerekmez, Robolectric ile; 77 test, ekran görüntülerini de üretir):
 ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
+# Esmâ-ül Hüsnâ yazı tipi: npm @expo-google-fonts/aref-ruqaa 0.4.1 → assets/fonts (SIL OFL 1.1)
 ```
 
 - `app/src/main` — uygulama kaynak kodu (saf Java, dış kütüphane yok).

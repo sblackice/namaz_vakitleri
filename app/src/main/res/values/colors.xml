@@ -24,4 +24,10 @@
     <color name="gold">#C9971C</color>
     <color name="rug">#8E1B1B</color>
     <color name="rug_dark">#5E1010</color>
+    <!-- Esmâ-ül Hüsnâ sayfası (temadan bağımsız koyu zemin, altın yazı) -->
+    <color name="esma_bg">#121212</color>
+    <color name="esma_card">#262626</color>
+    <color name="esma_card_pressed">#3A3A3A</color>
+    <color name="esma_gold">#D9B56A</color>
+    <color name="esma_green">#4CD38A</color>
 </resources>

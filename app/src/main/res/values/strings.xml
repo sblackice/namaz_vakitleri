@@ -33,10 +33,10 @@
     <string name="zikir_target">Hedef</string>
 
     <!-- Esmâ-ül Hüsnâ -->
-    <string name="esma_intro">Allah\'ın 99 güzel ismi. Arapça okunuşunu dinlemek için ▶ düğmesine dokunun.</string>
+    <string name="esma_intro">Allah\'ın 99 güzel ismi. Bir isme dokununca anlamı açılır ve Arapça okunuşu seslendirilir. Sağ alttaki ▶ düğmesi 99 ismi sırayla okur; “Tesbih” Zikirmatik\'i açar.</string>
     <string name="esma_play_all">▶ Hepsini Sırayla Dinle</string>
     <string name="esma_stop">■ Durdur</string>
-    <string name="esma_note">İsimlerin sırası ve Arapça yazılışı Tirmizî\'nin Sünen\'indeki hadise (Daavât, 3507) göredir. Türkçe anlamlar kısa açıklamalardır; ayrıntı için TDV İslâm Ansiklopedisi\'nin “Esmâ-i Hüsnâ” maddesine bakabilirsiniz. Seslendirme, telefonunuzun Arapça konuşma (metin okuma) motoruyla yapılır; telaffuz telefona göre değişebilir.</string>
+    <string name="esma_note">İsimlerin sırası ve Arapça yazılışı Tirmizî\'nin Sünen\'indeki hadise (Daavât, 3507) göredir. Türkçe anlamlar kısa açıklamalardır; ayrıntı için TDV İslâm Ansiklopedisi\'nin “Esmâ-i Hüsnâ” maddesine bakabilirsiniz. Arapça yazı tipi: Aref Ruqaa (SIL Open Font License). Seslendirme, telefonunuzun Arapça konuşma (metin okuma) motoruyla yapılır; telaffuz telefona göre değişebilir.</string>
 
     <!-- En Yakın Cami -->
     <string name="cami_intro">Haritada yakınınızdaki camiler görünür. Bir camiye dokunun, sonra “Yol Tarifi” ile Google Haritalar\'da yolu görün.</string>

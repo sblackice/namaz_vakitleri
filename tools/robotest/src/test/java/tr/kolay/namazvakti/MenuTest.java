@@ -192,28 +192,52 @@ public class MenuTest {
     public void esmaulHusna99IsimVeArapcaSeslendirme() throws Exception {
         ShadowTextToSpeech.addLanguageAvailability(new Locale("ar"));
         MainActivity a = openPage(R.id.menu_esma, MainActivity.ESMA);
+        EsmaPage page = (EsmaPage) a.page(MainActivity.ESMA);
         LinearLayout list = (LinearLayout) a.findViewById(R.id.list_items);
-        assertEquals(99, list.getChildCount());
-        View first = list.getChildAt(0);
-        assertEquals("1", ((TextView) first.findViewById(R.id.esma_no)).getText().toString());
+        assertEquals("3 sütun x 33 satır", 33, list.getChildCount());
+        assertEquals(3, ((LinearLayout) list.getChildAt(0)).getChildCount());
+        View first = page.card(0);
         assertEquals("Allah", ((TextView) first.findViewById(R.id.esma_okunus)).getText().toString());
-        View last = list.getChildAt(98);
+        View last = page.card(98);
         assertEquals("Es-Sabûr", ((TextView) last.findViewById(R.id.esma_okunus)).getText().toString());
-        assertEquals(nfc("الصَّبُورُ"), nfc(((TextView) last.findViewById(R.id.esma_arapca)).getText().toString()));
+        TextView ar = (TextView) last.findViewById(R.id.esma_arapca);
+        assertEquals(nfc("الصَّبُورُ"), nfc(ar.getText().toString()));
+        assertEquals("altın renk", 0xFFD9B56A, ar.getCurrentTextColor());
+        assertNotNull(ar.getTypeface());
+        // Kartlar aynı satırda yan yana
+        TestUtil.layout(a);
+        assertEquals(loc(page.card(0))[1], loc(page.card(2))[1]);
+        assertTrue(loc(page.card(0))[0] < loc(page.card(1))[0]);
         TestUtil.screenshot(a, "13-esmaul-husna");
 
-        EsmaPage page = (EsmaPage) a.page(MainActivity.ESMA);
         initTts(TextToSpeech.SUCCESS);
         assertEquals(EsmaPage.TTS_READY, page.ttsState());
-        list.getChildAt(1).findViewById(R.id.esma_dinle).performClick(); // Er-Rahmân
-        TextToSpeech tts = findTts();
-        ShadowTextToSpeech st = Shadow.extract(tts);
+        page.card(1).performClick(); // Er-Rahmân: pencere açılır ve okunur
+        assertEquals(1, page.speaking());
+        assertTrue(page.card(1).isSelected());
+        TestUtil.screenshot(a, "13b-esmaul-husna-detay");
+        ShadowLooper.idleMainLooper(); // test ortamında okuma hemen "bitti" sayılır
+        AlertDialog d = page.detail();
+        assertTrue(d.isShowing());
+        assertEquals("Er-Rahmân", ((TextView) d.findViewById(R.id.esma_d_okunus)).getText().toString());
+        assertEquals("2 / 99", ((TextView) d.findViewById(R.id.esma_d_no)).getText().toString());
+        ShadowTextToSpeech st = Shadow.extract(findTts());
         assertEquals(nfc("الرَّحْمَن"), nfc(st.getLastSpokenText()));
         assertEquals(new Locale("ar"), st.getCurrentLanguage());
-        assertEquals(1, page.speaking());
-        assertEquals("■", ((Button) list.getChildAt(1).findViewById(R.id.esma_dinle)).getText().toString());
-        page.stop();
         assertEquals(-1, page.speaking());
+        assertFalse(page.card(1).isSelected());
+        d.findViewById(R.id.esma_d_next).performClick();
+        assertEquals("Er-Rahîm", ((TextView) d.findViewById(R.id.esma_d_okunus)).getText().toString());
+        d.findViewById(R.id.esma_d_close).performClick();
+        ShadowLooper.idleMainLooper();
+        assertEquals(-1, page.speaking());
+
+        // Sağ alttaki ▶ hepsini sırayla okur; Tesbih zikirmatiği açar.
+        a.findViewById(R.id.esma_play_all).performClick();
+        assertEquals(0, page.speaking());
+        assertEquals("■", ((TextView) a.findViewById(R.id.esma_play_all)).getText().toString());
+        a.findViewById(R.id.esma_tab_tesbih).performClick();
+        assertEquals(MainActivity.ZIKIR, a.currentTab());
     }
 
     private static TextToSpeech findTts() {
@@ -237,7 +261,7 @@ public class MenuTest {
         EsmaPage page = (EsmaPage) a.page(MainActivity.ESMA);
         initTts(TextToSpeech.SUCCESS);
         assertEquals(EsmaPage.TTS_NO_ARABIC, page.ttsState());
-        Button fix = (Button) a.findViewById(R.id.esma_fix_voice);
+        android.widget.Button fix = (android.widget.Button) a.findViewById(R.id.esma_fix_voice);
         assertEquals(View.VISIBLE, fix.getVisibility());
         fix.performClick();
         Intent next = shadowOf(a).getNextStartedActivity();

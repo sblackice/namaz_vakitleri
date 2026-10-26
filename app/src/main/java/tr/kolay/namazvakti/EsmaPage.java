@@ -1,6 +1,11 @@
 package tr.kolay.namazvakti;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.tts.TextToSpeech;
@@ -15,8 +20,10 @@ import android.widget.TextView;
 import java.util.Locale;
 
 /**
- * Esmâ-ül Hüsnâ: Allah'ın 99 ismi. Her kartta sıra numarası, Arapça yazılış, Türkçe okunuş ve
- * anlam vardır. ▶ düğmesi ismin Arapçasını telefonun konuşma (metin okuma) motoruyla seslendirir.
+ * Esmâ-ül Hüsnâ: Allah'ın 99 ismi. Koyu zemin üzerinde 3 sütunlu kartlar: altın renkli Arapça
+ * isim (açık lisanslı Aref Ruqaa hat yazı tipiyle) ve altında Türkçe okunuşu. Bir karta
+ * dokununca büyük bir pencerede anlamı çıkar ve Arapçası telefonun konuşma (metin okuma)
+ * motoruyla seslendirilir. Sağ alttaki ▶ düğmesi 99 ismi sırayla okur; "Tesbih" Zikirmatik'i açar.
  * İnternet gerekmez; ancak telefonda Arapça ses paketi yüklü olmalıdır.
  */
 final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
@@ -24,11 +31,13 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
             TTS_ERROR = 4;
     static final String UTT = "esma_";
     static final Locale ARABIC = new Locale("ar");
+    static final int COLUMNS = 3;
+    private static Typeface hat;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final View[] cards = new View[Esma.LISTE.length];
-    private final TextView status;
-    private final Button playAll, fixVoice;
+    private final TextView status, playAll;
+    private final Button fixVoice;
     private final ScrollView scroll;
     private final LinearLayout list;
     private TextToSpeech tts;
@@ -36,22 +45,30 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
     private int speaking = -1;
     private boolean playingAll;
     private int pending = -1; // motor hazır olunca okunacak isim
+    private AlertDialog detail;
+    private int detailIndex = -1;
+
+    /** Hat yazı tipi (assets/fonts, SIL Open Font License). Yüklenemezse telefonun yazı tipi kullanılır. */
+    static Typeface hat(Context c) {
+        if (hat == null) {
+            try {
+                hat = Typeface.createFromAsset(c.getAssets(), "fonts/aref_ruqaa_bold.ttf");
+            } catch (RuntimeException e) {
+                hat = Typeface.DEFAULT;
+            }
+        }
+        return hat;
+    }
 
     EsmaPage(MainActivity a, ViewGroup parent) {
-        super(a, parent, R.layout.page_list);
-        Ui.header(view, "Allah'ın 99 İsmi", a.getString(R.string.menu_esma));
-        ((TextView) view.findViewById(R.id.list_intro)).setText(R.string.esma_intro);
-        ((TextView) view.findViewById(R.id.list_note)).setText(R.string.esma_note);
+        super(a, parent, R.layout.page_esma);
         scroll = (ScrollView) view.findViewById(R.id.list_scroll);
         list = (LinearLayout) view.findViewById(R.id.list_items);
+        playAll = (TextView) view.findViewById(R.id.esma_play_all);
+        fixVoice = (Button) view.findViewById(R.id.esma_fix_voice);
+        status = (TextView) view.findViewById(R.id.esma_status);
         LayoutInflater inf = a.getLayoutInflater();
 
-        LinearLayout top = (LinearLayout) view.findViewById(R.id.list_top);
-        View controls = inf.inflate(R.layout.esma_controls, top, false);
-        top.addView(controls);
-        playAll = (Button) controls.findViewById(R.id.esma_play_all);
-        fixVoice = (Button) controls.findViewById(R.id.esma_fix_voice);
-        status = (TextView) controls.findViewById(R.id.esma_status);
         playAll.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (playingAll || speaking >= 0) stop(); else playFrom(0);
@@ -60,26 +77,95 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
         fixVoice.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { openVoiceSettings(); }
         });
+        view.findViewById(R.id.esma_back).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { activity.select(MainActivity.HOME); }
+        });
+        view.findViewById(R.id.esma_tab_tesbih).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { activity.select(MainActivity.ZIKIR); }
+        });
+        view.findViewById(R.id.esma_info).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                new AlertDialog.Builder(activity)
+                        .setTitle(R.string.menu_esma)
+                        .setMessage(activity.getString(R.string.esma_intro) + "\n\n"
+                                + activity.getString(R.string.esma_note))
+                        .setPositiveButton("Tamam", null)
+                        .show();
+            }
+        });
 
+        Typeface font = hat(a);
+        LinearLayout row = null;
         for (int i = 0; i < Esma.LISTE.length; i++) {
+            if (i % COLUMNS == 0) {
+                row = new LinearLayout(a);
+                row.setOrientation(LinearLayout.HORIZONTAL);
+                list.addView(row);
+            }
             final int idx = i;
             Esma.Isim e = Esma.LISTE[i];
-            View card = inf.inflate(R.layout.item_esma, list, false);
-            ((TextView) card.findViewById(R.id.esma_no)).setText(String.valueOf(i + 1));
-            ((TextView) card.findViewById(R.id.esma_arapca)).setText(e.arapca);
+            View card = inf.inflate(R.layout.item_esma, row, false);
+            TextView ar = (TextView) card.findViewById(R.id.esma_arapca);
+            ar.setTypeface(font);
+            ar.setText(e.arapca);
             ((TextView) card.findViewById(R.id.esma_okunus)).setText(e.okunus);
-            ((TextView) card.findViewById(R.id.esma_anlam)).setText(e.anlam);
-            Button b = (Button) card.findViewById(R.id.esma_dinle);
-            b.setContentDescription(e.okunus + " ismini dinle");
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    if (speaking == idx) stop(); else speakOne(idx);
-                }
+            card.setContentDescription((i + 1) + ". " + e.okunus + ": " + e.anlam);
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { open(idx); }
             });
             cards[i] = card;
-            list.addView(card);
+            row.addView(card);
+        }
+        // Son satır eksikse boşluk bırakılır (kartlar eşit genişlikte kalsın).
+        while (row != null && row.getChildCount() < COLUMNS) {
+            View gap = new View(a);
+            row.addView(gap, new LinearLayout.LayoutParams(0, 1, 1f));
         }
     }
+
+    View card(int i) { return cards[i]; }
+
+    /** Bir ismin büyük penceresini açar ve okur. */
+    void open(int idx) {
+        if (detail == null) {
+            View v = activity.getLayoutInflater().inflate(R.layout.dialog_esma, null);
+            ((TextView) v.findViewById(R.id.esma_d_arapca)).setTypeface(hat(activity));
+            Ui.scaleText(v, scale());
+            v.findViewById(R.id.esma_d_prev).setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View x) { open((detailIndex + Esma.LISTE.length - 1) % Esma.LISTE.length); }
+            });
+            v.findViewById(R.id.esma_d_next).setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View x) { open((detailIndex + 1) % Esma.LISTE.length); }
+            });
+            v.findViewById(R.id.esma_d_play).setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View x) {
+                    if (speaking == detailIndex) stop(); else speakOne(detailIndex);
+                }
+            });
+            v.findViewById(R.id.esma_d_close).setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View x) { detail.dismiss(); }
+            });
+            detail = new AlertDialog.Builder(activity).setView(v).create();
+            detail.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override public void onDismiss(DialogInterface d) {
+                    if (!playingAll) stop();
+                }
+            });
+            if (detail.getWindow() != null) {
+                detail.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+        }
+        detailIndex = idx;
+        Esma.Isim e = Esma.LISTE[idx];
+        detail.show();
+        ((TextView) detail.findViewById(R.id.esma_d_no)).setText((idx + 1) + " / " + Esma.LISTE.length);
+        ((TextView) detail.findViewById(R.id.esma_d_arapca)).setText(e.arapca);
+        ((TextView) detail.findViewById(R.id.esma_d_okunus)).setText(e.okunus);
+        ((TextView) detail.findViewById(R.id.esma_d_anlam)).setText(e.anlam);
+        speakOne(idx);
+    }
+
+    AlertDialog detail() { return detail; }
 
     /** Arapça harekeler: tenvinler (0x064B-0x064D), üstün/ötre/esre (0x064E-0x0650), şedde, sükûn. */
     static final int HAREKE_ILK = 0x064B, SEDDE = 0x0651, HAREKE_SON = 0x0652;
@@ -246,19 +332,16 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
     }
 
     private void highlight(int idx) {
-        if (speaking >= 0 && speaking < cards.length) {
-            cards[speaking].setBackgroundResource(R.drawable.row_normal);
-            ((Button) cards[speaking].findViewById(R.id.esma_dinle)).setText("▶");
-        }
+        if (speaking >= 0 && speaking < cards.length) cards[speaking].setSelected(false);
         speaking = idx;
         if (idx >= 0) {
             final View card = cards[idx];
-            card.setBackgroundResource(R.drawable.card_outline);
-            ((Button) card.findViewById(R.id.esma_dinle)).setText("■");
+            card.setSelected(true);
             if (playingAll) {
                 scroll.post(new Runnable() {
                     @Override public void run() {
-                        scroll.smoothScrollTo(0, list.getTop() + card.getTop() - 24);
+                        View row = (View) card.getParent();
+                        scroll.smoothScrollTo(0, list.getTop() + row.getTop() - 24);
                     }
                 });
             }
@@ -267,7 +350,12 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
 
     private void updateControls() {
         boolean busy = playingAll || speaking >= 0;
-        playAll.setText(busy ? R.string.esma_stop : R.string.esma_play_all);
+        playAll.setText(busy ? "■" : "▶");
+        playAll.setContentDescription(activity.getString(busy ? R.string.esma_stop : R.string.esma_play_all));
+        if (detail != null && detail.isShowing()) {
+            ((TextView) detail.findViewById(R.id.esma_d_play)).setText(
+                    speaking == detailIndex && speaking >= 0 ? "■ Durdur" : "▶ Dinle");
+        }
         fixVoice.setVisibility(ttsState == TTS_NO_ARABIC || ttsState == TTS_ERROR
                 ? View.VISIBLE : View.GONE);
         switch (ttsState) {
@@ -280,7 +368,7 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
                         + "Google'ın “Konuşma Hizmetleri” uygulamasını yükleyip açın.");
                 break;
             default:
-                status.setText(busy && speaking >= 0
+                status.setText(playingAll && speaking >= 0
                         ? "Okunuyor: " + (speaking + 1) + ". " + Esma.LISTE[speaking].okunus : "");
         }
         status.setVisibility(status.getText().length() == 0 ? View.GONE : View.VISIBLE);
