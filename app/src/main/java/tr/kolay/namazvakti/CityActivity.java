@@ -51,6 +51,7 @@ public class CityActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Tema.uygula(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
         Ui.header(findViewById(R.id.city_page), "Kolay Namaz Vakti", getString(R.string.city_title));

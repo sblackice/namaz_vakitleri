@@ -15,6 +15,32 @@
     <string name="tab_days">Dini Günler</string>
     <string name="tab_qibla">Kıble</string>
     <string name="tab_duas">Dualar</string>
+    <string name="tab_menu">Menü</string>
+
+    <!-- Menü paneli -->
+    <string name="menu_close">Menüyü kapat</string>
+    <string name="menu_cami">En Yakın Cami</string>
+    <string name="menu_esma">Esmâ-ül Hüsnâ</string>
+    <string name="menu_zikir">Zikirmatik</string>
+    <string name="menu_tema">Renk Teması</string>
+
+    <!-- Renk Teması -->
+    <string name="tema_intro">Uygulamanın renklerini seçin. Dokunduğunuz tema hemen uygulanır.</string>
+
+    <!-- Zikirmatik -->
+    <string name="zikir_intro">Ortadaki büyük düğmeye her dokunuşta sayı bir artar.</string>
+    <string name="zikir_reset">↺ Sıfırla</string>
+    <string name="zikir_target">Hedef</string>
+
+    <!-- Esmâ-ül Hüsnâ -->
+    <string name="esma_intro">Allah\'ın 99 güzel ismi. Arapça okunuşunu dinlemek için ▶ düğmesine dokunun.</string>
+    <string name="esma_play_all">▶ Hepsini Sırayla Dinle</string>
+    <string name="esma_stop">■ Durdur</string>
+    <string name="esma_note">İsimlerin sırası ve Arapça yazılışı Tirmizî\'nin Sünen\'indeki hadise (Daavât, 3507) göredir. Türkçe anlamlar kısa açıklamalardır; ayrıntı için TDV İslâm Ansiklopedisi\'nin “Esmâ-i Hüsnâ” maddesine bakabilirsiniz. Seslendirme, telefonunuzun Arapça konuşma (metin okuma) motoruyla yapılır; telaffuz telefona göre değişebilir.</string>
+
+    <!-- En Yakın Cami -->
+    <string name="cami_intro">Haritada yakınınızdaki camiler görünür. Bir camiye dokunun, sonra “Yol Tarifi” ile Google Haritalar\'da yolu görün.</string>
+    <string name="cami_note">Cami bilgileri OpenStreetMap gönüllülerinin girdiği verilerdir (© OpenStreetMap katkıda bulunanlar, ODbL); bazı camiler eksik olabilir. Bu sayfa internet kullanır: yaklaşık konumunuz, harita ve cami listesi için OpenStreetMap sunucularına gönderilir. Yol tarifi Google Haritalar\'da açılır.</string>
 
     <!-- Ana Sayfa -->
     <string name="countdown_units">saat : dakika : saniye</string>

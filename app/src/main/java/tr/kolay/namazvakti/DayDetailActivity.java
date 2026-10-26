@@ -13,6 +13,7 @@ public class DayDetailActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Tema.uygula(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_day);
         int idx = getIntent().getIntExtra(EXTRA_INDEX, -1);

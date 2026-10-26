@@ -8,10 +8,12 @@ import java.util.TimeZone;
 /**
  * Dini gün ve geceler.
  *
- * Tarihler: Diyanet İşleri Başkanlığı'nın yayımladığı dini günler listeleri (2026, 2027, 2028).
- * Resmî sayfalara bu çalışma ortamından erişilemedi; tarihler arama sonuçlarındaki özetlerden ve
- * birden çok kaynaktan karşılaştırılarak alındı ve Ümmü'l-Kurâ takvimiyle tutarlılığı kontrol
- * edildi (her kandil, belirtilen günün akşamı başlar). 2028'den sonrası için uygulamanın
+ * Tarihler: Diyanet İşleri Başkanlığı'nın yayımladığı dini günler listeleri
+ * (vakithesaplama.diyanet.gov.tr, icerik=153 / 154 / 185 / 186 / 187 → 2026-2030).
+ * Resmî sayfalar bu çalışma ortamından doğrudan açılamadı; tarihler arama motorunun bu
+ * sayfalardan verdiği satırlardan alındı. Her tarihin haftanın günü Diyanet'in yazdığıyla
+ * karşılaştırıldı ve Hicrî ay başları tools/hicri_takvim_uret.py hesabıyla kontrol edildi
+ * (her kandil, belirtilen günün akşamı başlar). 2030'dan sonrası için uygulamanın
  * güncellenmesi gerekir.
  */
 final class DiniGunler {
@@ -80,10 +82,40 @@ final class DiniGunler {
         new Gun(2028, 11, 23, REGAIB, "Regaib Kandili", "Recep'in ilk Cuma gecesi", 0),
         new Gun(2028, 12, 13, MIRAC, "Miraç Kandili", "26 Recep 1450 (27. gece)", 0),
         new Gun(2028, 12, 30, BERAT, "Berat Kandili", "14 Şaban 1450 (15. gece)", 0),
+        // 2029 (Diyanet: vakithesaplama.diyanet.gov.tr/icerik.php?icerik=186)
+        new Gun(2029, 1, 16, RAMAZAN, "Ramazan Başlangıcı (ilk oruç)", "1 Ramazan 1450", 0),
+        new Gun(2029, 2, 10, KADIR, "Kadir Gecesi", "26 Ramazan 1450 (27. gece)", 0),
+        new Gun(2029, 2, 13, RAMAZAN_AREFE, "Ramazan Bayramı Arefesi", "Ramazan'ın son günü", 0),
+        new Gun(2029, 2, 14, RAMAZAN_BAYRAMI, "Ramazan Bayramı", "1 Şevval 1450", 3),
+        new Gun(2029, 4, 23, KURBAN_AREFE, "Kurban Bayramı Arefesi", "9 Zilhicce 1450", 0),
+        new Gun(2029, 4, 24, KURBAN_BAYRAMI, "Kurban Bayramı", "10 Zilhicce 1450", 4),
+        new Gun(2029, 5, 14, HICRI_YILBASI, "Hicri Yılbaşı", "1 Muharrem 1451", 0),
+        new Gun(2029, 5, 23, ASURE, "Aşure Günü", "10 Muharrem 1451", 0),
+        new Gun(2029, 7, 23, MEVLID, "Mevlid Kandili", "11 Rebiülevvel 1451 (12. gece)", 0),
+        new Gun(2029, 11, 7, UC_AYLAR, "Üç Ayların Başlangıcı", "1 Recep 1451", 0),
+        new Gun(2029, 11, 8, REGAIB, "Regaib Kandili", "Recep'in ilk Cuma gecesi", 0),
+        new Gun(2029, 12, 2, MIRAC, "Miraç Kandili", "26 Recep 1451 (27. gece)", 0),
+        new Gun(2029, 12, 20, BERAT, "Berat Kandili", "14 Şaban 1451 (15. gece)", 0),
+        // 2030 (Diyanet: vakithesaplama.diyanet.gov.tr/icerik.php?icerik=187)
+        new Gun(2030, 1, 5, RAMAZAN, "Ramazan Başlangıcı (ilk oruç)", "1 Ramazan 1451", 0),
+        new Gun(2030, 1, 30, KADIR, "Kadir Gecesi", "26 Ramazan 1451 (27. gece)", 0),
+        new Gun(2030, 2, 3, RAMAZAN_AREFE, "Ramazan Bayramı Arefesi", "Ramazan'ın son günü", 0),
+        new Gun(2030, 2, 4, RAMAZAN_BAYRAMI, "Ramazan Bayramı", "1 Şevval 1451", 3),
+        new Gun(2030, 4, 12, KURBAN_AREFE, "Kurban Bayramı Arefesi", "9 Zilhicce 1451", 0),
+        new Gun(2030, 4, 13, KURBAN_BAYRAMI, "Kurban Bayramı", "10 Zilhicce 1451", 4),
+        new Gun(2030, 5, 3, HICRI_YILBASI, "Hicri Yılbaşı", "1 Muharrem 1452", 0),
+        new Gun(2030, 5, 12, ASURE, "Aşure Günü", "10 Muharrem 1452", 0),
+        new Gun(2030, 7, 12, MEVLID, "Mevlid Kandili", "11 Rebiülevvel 1452 (12. gece)", 0),
+        new Gun(2030, 10, 28, UC_AYLAR, "Üç Ayların Başlangıcı", "1 Recep 1452", 0),
+        new Gun(2030, 10, 31, REGAIB, "Regaib Kandili", "Recep'in ilk Cuma gecesi", 0),
+        new Gun(2030, 11, 22, MIRAC, "Miraç Kandili", "26 Recep 1452 (27. gece)", 0),
+        new Gun(2030, 12, 9, BERAT, "Berat Kandili", "14 Şaban 1452 (15. gece)", 0),
+        new Gun(2030, 12, 26, RAMAZAN, "Ramazan Başlangıcı (ilk oruç)", "1 Ramazan 1452", 0),
     };
 
     static final String TARIH_KAYNAGI = "Tarihler Diyanet İşleri Başkanlığı'nın dini günler "
-            + "listesine göredir. Kandil geceleri, yazılı günün akşamı (akşam namazıyla) başlar.";
+            + "listesine göredir (2026-2030). Kandil geceleri, yazılı günün akşamı (akşam namazıyla) "
+            + "başlar.";
 
     /** Bugün veya sonrasındaki günler (bayramlar sürdüğü sürece listede kalır), tarih sırasıyla. */
     static List<Gun> yaklasanlar(long now, TimeZone tz) {

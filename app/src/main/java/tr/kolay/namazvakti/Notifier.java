@@ -54,7 +54,7 @@ final class Notifier {
                 .setStyle(new Notification.BigTextStyle().bigText(text))
                 .setCategory(Notification.CATEGORY_REMINDER)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setColor(c.getColor(R.color.accent))
+                .setColor(Ui.color(Tema.baglam(c), R.attr.colAccent))
                 .setAutoCancel(true)
                 .setContentIntent(open);
         nm.notify(NOTIFICATION_ID, b.build());

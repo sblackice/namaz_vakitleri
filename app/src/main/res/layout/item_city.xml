@@ -6,5 +6,5 @@
     android:gravity="center_vertical"
     android:minHeight="68dp"
     android:paddingStart="16dp"
-    android:textColor="@color/text_main"
+    android:textColor="?attr/colText"
     android:textSize="27sp" />

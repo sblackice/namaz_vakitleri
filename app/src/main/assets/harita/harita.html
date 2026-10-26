@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>En Yakın Cami</title>
+<link rel="stylesheet" href="leaflet.css">
+<style>
+  html, body, #harita { margin: 0; padding: 0; width: 100%; height: 100%; }
+  body { background: #e9e5dc; font-family: sans-serif; }
+  .cami-isaret { display: flex; align-items: center; justify-content: center; }
+  .cami-isaret svg { filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }
+  .ben { width: 22px; height: 22px; border-radius: 50%; background: #1565C0;
+         border: 4px solid #fff; box-shadow: 0 0 0 2px #1565C0, 0 1px 4px rgba(0,0,0,.5); box-sizing: border-box; }
+  .leaflet-popup-content { margin: 12px 14px; font-size: 19px; line-height: 1.3; min-width: 190px; }
+  .ad { font-weight: bold; font-size: 21px; }
+  .uzak { color: #444; margin: 4px 0 10px; }
+  .tarif { display: block; width: 100%; padding: 14px 8px; border: 0; border-radius: 10px;
+           font-size: 20px; font-weight: bold; color: #fff; background: var(--renk, #0A7275); }
+  .tarif:active { opacity: .8; }
+  .leaflet-control-attribution { font-size: 12px; }
+  .leaflet-control-zoom a { width: 44px !important; height: 44px !important; line-height: 44px !important; font-size: 26px !important; }
+</style>
+</head>
+<body>
+<div id="harita"></div>
+<script src="leaflet.js"></script>
+<script>
+  // Android tarafı (CamiPage.java) haritayı şu işlevlerle doldurur:
+  //   baslat(enlem, boylam, renk)   haritayı konuma göre açar
+  //   camiler([{a: ad, e: enlem, b: boylam, m: metre}, ...])   cami işaretlerini koyar
+  //   goster(i)                     i. camiyi ortalar ve bilgisini açar
+  // Cami adları OpenStreetMap'ten gelir; ekrana yazılırken HTML olarak yorumlanmaz.
+  var harita = null, isaretler = [], renk = '#0A7275';
+
+  function kacis(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c];
+    });
+  }
+
+  function mesafe(m) {
+    return m < 1000 ? Math.round(m / 10) * 10 + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
+  }
+
+  function camiSimgesi() {
+    var svg = '<svg width="40" height="48" viewBox="0 0 40 48" xmlns="http://www.w3.org/2000/svg">'
+      + '<path d="M20 47 C20 47 3 28 3 17 A17 17 0 0 1 37 17 C37 28 20 47 20 47 Z" fill="' + renk + '" stroke="#fff" stroke-width="2.5"/>'
+      + '<path d="M11 24 H29 V27 H11 Z M12 23.5 A8 8 0 0 1 28 23.5 Z M19.2 8 H20.8 V13 H19.2 Z" fill="#fff"/>'
+      + '</svg>';
+    return L.divIcon({className: 'cami-isaret', html: svg, iconSize: [40, 48], iconAnchor: [20, 47], popupAnchor: [0, -42]});
+  }
+
+  function baslat(enlem, boylam, r) {
+    if (r) renk = r;
+    document.documentElement.style.setProperty('--renk', renk);
+    if (!harita) {
+      harita = L.map('harita', {zoomControl: true, attributionControl: true}).setView([enlem, boylam], 15);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> katkıda bulunanlar'
+      }).addTo(harita);
+      harita.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
+    } else {
+      harita.setView([enlem, boylam], 15);
+    }
+    if (window.benIsareti) harita.removeLayer(window.benIsareti);
+    window.benIsareti = L.marker([enlem, boylam], {
+      icon: L.divIcon({className: '', html: '<div class="ben"></div>', iconSize: [22, 22], iconAnchor: [11, 11]}),
+      interactive: false, keyboard: false
+    }).addTo(harita);
+  }
+
+  function camiler(liste) {
+    isaretler.forEach(function (m) { harita.removeLayer(m); });
+    isaretler = [];
+    var sinir = window.benIsareti ? [window.benIsareti.getLatLng()] : [];
+    liste.forEach(function (c, i) {
+      var html = '<div class="ad">' + kacis(c.a) + '</div>'
+        + '<div class="uzak">' + mesafe(c.m) + ' uzakta</div>'
+        + '<button class="tarif" onclick="Android.yolTarifi(' + i + ')">Yol Tarifi</button>';
+      var m = L.marker([c.e, c.b], {icon: camiSimgesi(), title: c.a}).addTo(harita).bindPopup(html);
+      isaretler.push(m);
+      if (i < 5) sinir.push(L.latLng(c.e, c.b));
+    });
+    if (sinir.length > 1) harita.fitBounds(L.latLngBounds(sinir), {padding: [40, 40], maxZoom: 16});
+  }
+
+  function goster(i) {
+    var m = isaretler[i];
+    if (!m) return;
+    harita.setView(m.getLatLng(), Math.max(harita.getZoom(), 16));
+    m.openPopup();
+  }
+
+  if (window.Android) Android.hazir();
+</script>
+</body>
+</html>

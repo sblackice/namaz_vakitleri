@@ -15,6 +15,7 @@ public class SettingsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Tema.uygula(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Ui.header(findViewById(R.id.settings_page), "Kolay Namaz Vakti", "Diğer Ayarlar");

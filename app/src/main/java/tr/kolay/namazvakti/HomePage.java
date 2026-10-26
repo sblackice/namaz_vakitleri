@@ -156,10 +156,10 @@ final class HomePage extends Page {
             int bg, color;
             if (i == highlight) {
                 bg = R.drawable.row_next;
-                color = activity.getColor(R.color.on_accent);
+                color = Ui.color(activity, R.attr.colOnAccent);
             } else {
                 bg = R.drawable.row_normal;
-                color = activity.getColor(today[i] <= now ? R.color.text_past : R.color.text_main);
+                color = Ui.color(activity, today[i] <= now ? R.attr.colTextPast : R.attr.colText);
             }
             rowViews[i].setBackgroundResource(bg);
             nameViews[i].setTextColor(color);

@@ -81,6 +81,26 @@ final class Prefs {
         sp(c).edit().putInt("off" + i, Math.max(-30, Math.min(30, min))).apply();
     }
 
+    /** Renk teması (Tema.ADLAR sırası). */
+    static int theme(Context c) { return sp(c).getInt("tema", 0); }
+
+    static void setTheme(Context c, int i) { sp(c).edit().putInt("tema", i).apply(); }
+
+    // ---- Zikirmatik ----
+    static final int[] ZIKIR_HEDEFLERI = {33, 99, 100, 500, 1000};
+
+    static int zikirCount(Context c) { return sp(c).getInt("zikir", 0); }
+
+    static void setZikirCount(Context c, int n) {
+        sp(c).edit().putInt("zikir", Math.max(0, Math.min(999999, n))).apply();
+    }
+
+    static int zikirTarget(Context c) { return sp(c).getInt("zikirHedef", 33); }
+
+    static void setZikirTarget(Context c, int n) {
+        sp(c).edit().putInt("zikirHedef", Math.max(1, Math.min(99999, n))).apply();
+    }
+
     static boolean askedFirstRun(Context c) { return sp(c).getBoolean("firstRun", false); }
 
     static void setAskedFirstRun(Context c) { sp(c).edit().putBoolean("firstRun", true).apply(); }

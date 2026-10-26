@@ -38,6 +38,8 @@ final class AdhanPage extends Page {
     private final TextView soundState;
     private final Button pickBtn, testBtn, defaultBtn, quietBtn, remindBtn;
     private final View[] permRows = new View[5];
+    private final java.util.List<Button> builtinButtons = new java.util.ArrayList<Button>();
+    private final java.util.List<Ezanlar.Ezan> builtins;
 
     AdhanPage(MainActivity a, ViewGroup parent) {
         super(a, parent, R.layout.page_adhan);
@@ -61,6 +63,19 @@ final class AdhanPage extends Page {
         }
 
         soundState = (TextView) view.findViewById(R.id.sound_state);
+        builtins = Ezanlar.mevcut(a);
+        LinearLayout builtinBox = (LinearLayout) view.findViewById(R.id.builtin_sounds);
+        for (final Ezanlar.Ezan e : builtins) {
+            Button b = (Button) inf.inflate(R.layout.button_builtin, builtinBox, false);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    Prefs.setAdhanSound(activity, e.uri(activity), e.ad);
+                    refresh();
+                }
+            });
+            builtinButtons.add(b);
+            builtinBox.addView(b);
+        }
         pickBtn = (Button) view.findViewById(R.id.btn_pick_sound);
         testBtn = (Button) view.findViewById(R.id.btn_test_sound);
         defaultBtn = (Button) view.findViewById(R.id.btn_default_sound);
@@ -140,9 +155,15 @@ final class AdhanPage extends Page {
         for (int k = 0; k < PRAYERS.length; k++) {
             boolean on = Prefs.adhanOn(activity, PRAYERS[k]);
             toggles[k].setText(on ? "AÇIK ✔" : "KAPALI");
-            toggles[k].setBackgroundResource(on ? R.drawable.button : R.drawable.button_off);
+            Ui.onOff(toggles[k], on);
         }
         String uri = Prefs.adhanUri(activity);
+        for (int i = 0; i < builtins.size(); i++) {
+            Ezanlar.Ezan e = builtins.get(i);
+            boolean sel = e.uri(activity).equals(uri);
+            builtinButtons.get(i).setText((sel ? "✔ " : "") + e.ad);
+            Ui.onOff(builtinButtons.get(i), sel);
+        }
         if (uri == null) {
             soundState.setText("Şu an: vakit girince telefonun bildirim sesi çalar.");
         } else {
@@ -197,6 +218,7 @@ final class AdhanPage extends Page {
     static boolean soundFileReadable(Context c) {
         String uri = Prefs.adhanUri(c);
         if (uri == null) return true;
+        if (Ezanlar.hazirMi(uri)) return true; // uygulamanın içindeki ses
         for (UriPermission p : c.getContentResolver().getPersistedUriPermissions()) {
             if (p.getUri().toString().equals(uri) && p.isReadPermission()) return true;
         }
@@ -228,7 +250,7 @@ final class AdhanPage extends Page {
         View row = permRows[i];
         TextView state = (TextView) row.findViewById(R.id.perm_state);
         state.setText(ok ? "✔ " + okText : "✖ " + badText);
-        state.setTextColor(activity.getColor(ok ? R.color.accent_text : R.color.warn));
+        state.setTextColor(Ui.color(activity, ok ? R.attr.colAccentText : R.attr.colWarn));
         ((TextView) row.findViewById(R.id.perm_why)).setText(why);
         Button b = (Button) row.findViewById(R.id.perm_button);
         b.setText(action);

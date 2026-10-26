@@ -33,6 +33,7 @@ public class NextPrayerWidget extends AppWidgetProvider {
         PendingIntent open = PendingIntent.getActivity(c, 1, new Intent(c, MainActivity.class),
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         rv.setOnClickPendingIntent(R.id.w_root, open);
+        rv.setInt(R.id.w_root, "setBackgroundResource", Tema.WIDGET_ZEMIN[Tema.secili(c)]);
         if (!Prefs.hasLocation(c)) {
             rv.setTextViewText(R.id.w_place, c.getString(R.string.app_name));
             rv.setTextViewText(R.id.w_next, "Şehir seçmek için dokunun");

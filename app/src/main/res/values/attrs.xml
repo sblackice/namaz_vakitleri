@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Renk teması özellikleri. Her tema (styles.xml) bunlara kendi rengini verir;
+         ekranlar ve çizimler renkleri buradan alır (?attr/...). -->
+    <attr name="colBg" format="color" />
+    <attr name="colSurface" format="color" />
+    <attr name="colBorder" format="color" />
+    <attr name="colText" format="color" />
+    <attr name="colTextPast" format="color" />
+    <attr name="colAccent" format="color" />
+    <attr name="colAccentDark" format="color" />
+    <attr name="colAccentLight" format="color" />
+    <attr name="colAccentText" format="color" />
+    <attr name="colOnAccent" format="color" />
+    <attr name="colAccentSoft" format="color" />
+    <attr name="colHeaderBg" format="color" />
+    <attr name="colTitle" format="color" />
+    <attr name="colWarn" format="color" />
+    <attr name="colOff" format="color" />
+    <attr name="colOffDark" format="color" />
+    <attr name="colMinaret" format="color" />
+    <attr name="colScrim" format="color" />
+</resources>

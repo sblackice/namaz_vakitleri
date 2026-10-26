@@ -6,4 +6,10 @@
     <item name="tab_days" type="id" />
     <item name="tab_qibla" type="id" />
     <item name="tab_duas" type="id" />
+    <item name="tab_menu" type="id" />
+    <!-- Menü panelindeki satırlar -->
+    <item name="menu_cami" type="id" />
+    <item name="menu_esma" type="id" />
+    <item name="menu_zikir" type="id" />
+    <item name="menu_tema" type="id" />
 </resources>

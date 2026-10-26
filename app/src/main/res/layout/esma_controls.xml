@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/esma_play_all"
+        style="@style/BigButton"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:text="@string/esma_play_all" />
+
+    <TextView
+        android:id="@+id/esma_status"
+        style="@style/Body"
+        android:layout_marginTop="6dp"
+        android:textColor="?attr/colAccentText"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/esma_fix_voice"
+        style="@style/BigButton"
+        android:layout_width="match_parent"
+        android:layout_marginTop="6dp"
+        android:text="Arapça Ses Paketini Yükle"
+        android:visibility="gone" />
+</LinearLayout>

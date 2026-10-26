@@ -191,4 +191,20 @@ public class AlarmTest {
         long tomorrowImsak = Times.forDay(app, Clock.now(), 1)[PrayerCalc.IMSAK];
         assertEquals(tomorrowImsak, alarms.peekNextScheduledAlarm().getTriggerAtMs());
     }
+
+    @Test
+    public void hazirEzanSesiHerZamanOkunabilir() {
+        Prefs.setAdhanSound(app, "android.resource://tr.kolay.namazvakti/raw/ezan_ornek", "Hazır ezan");
+        assertTrue(AdhanPage.soundFileReadable(app));
+    }
+
+    @Test
+    public void kesinAlarmIzniVerilinceAlarmYenidenKurulur() {
+        Intent i = new Intent("android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED")
+                .setPackage(app.getPackageName());
+        assertTrue("izin değişikliği dinlenmeli",
+                !app.getPackageManager().queryBroadcastReceivers(i, 0).isEmpty());
+        new BootReceiver().onReceive(app, i);
+        assertEquals(today()[PrayerCalc.OGLE], alarms.peekNextScheduledAlarm().getTriggerAtMs());
+    }
 }

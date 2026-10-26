@@ -76,17 +76,19 @@ public class QiblaView extends View {
         setMeasuredDimension(width, size);
     }
 
-    private int color(int id) { return getContext().getColor(id); }
+    private int color(int attr) { return Ui.color(getContext(), attr); }
 
     @Override
     protected void onDraw(Canvas c) {
         float cx = getWidth() / 2f, cy = getHeight() / 2f;
         float r = Math.min(getWidth(), getHeight()) / 2f - 14 * density;
         float rot = hasHeading ? -heading : 0; // kuzeyin ekrandaki açısı
+        int strong = color(R.attr.colText), soft = color(R.attr.colTextPast);
+        int faint = (soft & 0x00FFFFFF) | 0x99000000;
 
         // Halka
         ring.setStrokeWidth(2.5f * density);
-        ring.setColor(0xFF4A5552);
+        ring.setColor(strong);
         c.drawCircle(cx, cy, r, ring);
 
         // Çentikler (telefonla birlikte döner)
@@ -95,15 +97,15 @@ public class QiblaView extends View {
             if (deg % 30 == 0) {
                 len = r * 0.075f;
                 tick.setStrokeWidth(2.2f * density);
-                tick.setColor(0xFF4A5552);
+                tick.setColor(strong);
             } else if (deg % 10 == 0) {
                 len = r * 0.05f;
                 tick.setStrokeWidth(1.5f * density);
-                tick.setColor(0xFF6E7875);
+                tick.setColor(soft);
             } else {
                 len = r * 0.03f;
                 tick.setStrokeWidth(1f * density);
-                tick.setColor(0xFFA3ACA9);
+                tick.setColor(faint);
             }
             double a = Math.toRadians(deg + rot);
             float sx = (float) Math.sin(a), sy = (float) -Math.cos(a);
@@ -113,7 +115,7 @@ public class QiblaView extends View {
 
         // Yön harfleri: konumları döner, harfler hep dik durur
         text.setTextSize(r * 0.13f);
-        text.setColor(0xFF4A5552);
+        text.setColor(strong);
         float lr = r * 0.83f;
         for (int i = 0; i < 4; i++) {
             double a = Math.toRadians(i * 90 + rot);
@@ -123,7 +125,7 @@ public class QiblaView extends View {
         }
 
         // Telefonun baktığı yön: en üstte sabit turkuaz üçgen
-        fill.setColor(color(R.color.accent));
+        fill.setColor(color(R.attr.colAccent));
         path.reset();
         float tip = cy - r + 4 * density;
         path.moveTo(cx, tip);

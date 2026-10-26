@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- En Yakın Cami: üstte harita, altta en yakın camilerin listesi -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_header" />
+
+    <TextView
+        android:id="@+id/cami_status"
+        style="@style/Body"
+        android:paddingStart="14dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="6dp"
+        android:text="@string/cami_intro"
+        android:textSize="18sp" />
+
+    <FrameLayout
+        android:id="@+id/cami_map_box"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.15"
+        android:background="?attr/colBorder" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/cami_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:id="@+id/cami_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/cami_google"
+                style="@style/BigButton"
+                android:layout_width="match_parent"
+                android:layout_marginTop="6dp"
+                android:text="Google Haritalar'da Cami Ara" />
+
+            <TextView
+                style="@style/Note"
+                android:text="@string/cami_note"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

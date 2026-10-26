@@ -55,14 +55,14 @@
                     android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_main"
+                    android:textColor="?attr/colText"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/hijri"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_past"
+                    android:textColor="?attr/colTextPast"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -84,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:textColor="@color/on_accent"
+                        android:textColor="?attr/colOnAccent"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                         android:fontFeatureSettings="tnum"
                         android:gravity="center"
                         android:includeFontPadding="false"
-                        android:textColor="@color/on_accent"
+                        android:textColor="?attr/colOnAccent"
                         android:textSize="56sp"
                         android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:textColor="@color/on_accent"
+                        android:textColor="?attr/colOnAccent"
                         android:textSize="19sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -123,7 +123,7 @@
                     android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:text="@string/scroll_hint"
-                    android:textColor="@color/accent_text"
+                    android:textColor="?attr/colAccentText"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -154,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="@string/hadith_title"
-                            android:textColor="@color/title_dark"
+                            android:textColor="?attr/colTitle"
                             android:textSize="25sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:lineSpacingMultiplier="1.15"
-                        android:textColor="@color/text_main"
+                        android:textColor="?attr/colText"
                         android:textSize="22sp" />
 
                     <TextView
@@ -173,14 +173,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/text_main"
+                        android:textColor="?attr/colText"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/hadith_source"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_main"
+                        android:textColor="?attr/colText"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 

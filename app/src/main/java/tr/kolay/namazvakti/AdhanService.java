@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
 import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,11 +17,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 
 /**
  * Kullanıcının seçtiği ezan ses dosyasını çalar.
  * Ön planda çalışan bir servistir; bildirimdeki "Durdur" düğmesiyle veya ses bitince durur.
  * Ses, telefonun ALARM ses seviyesinde çalar. En fazla 10 dakika çalar (güvenlik sınırı).
+ * Ekran kapalıyken sesin kesilmemesi için işlemciyi uyanık tutar (WAKE_LOCK) ve ezan
+ * süresince başka bir uygulamanın çaldığı müziği durdurur (ses odağı).
  */
 public class AdhanService extends Service {
     static final String ACTION_PLAY = "tr.kolay.namazvakti.EZAN_CAL";
@@ -36,6 +40,13 @@ public class AdhanService extends Service {
     static volatile boolean playing;
 
     private MediaPlayer player;
+    private AudioFocusRequest focusRequest;
+    private final AudioManager.OnAudioFocusChangeListener focusListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                @Override public void onAudioFocusChange(int change) {
+                    // Telefon çalarsa sistem ezanı zaten susturur; ayrıca bir şey yapılmaz.
+                }
+            };
     private final Handler handler = new Handler(Looper.getMainLooper());
     private String title = "", text = "";
     private boolean test;
@@ -138,6 +149,7 @@ public class AdhanService extends Service {
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build());
             player.setDataSource(this, Uri.parse(uri));
+            player.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
             player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override public void onCompletion(MediaPlayer mp) { finish(false); }
             });
@@ -148,6 +160,7 @@ public class AdhanService extends Service {
                 }
             });
             player.prepare();
+            requestFocus();
             player.start();
             playing = true;
             handler.removeCallbacks(safetyStop);
@@ -177,7 +190,7 @@ public class AdhanService extends Service {
                 .setContentText(withStop ? "Ezan okunuyor. Durdurmak için “Durdur”a dokunun." : text)
                 .setCategory(Notification.CATEGORY_ALARM)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setColor(getColor(R.color.accent))
+                .setColor(Ui.color(Tema.baglam(this), R.attr.colAccent))
                 .setContentIntent(withStop ? stop : open)
                 .setAutoCancel(!withStop)
                 .setOngoing(withStop);
@@ -209,7 +222,39 @@ public class AdhanService extends Service {
         stopSelf();
     }
 
+    @SuppressWarnings("deprecation")
+    private void requestFocus() {
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        if (am == null) return;
+        if (Build.VERSION.SDK_INT >= 26) {
+            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                    .setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .build())
+                    .setOnAudioFocusChangeListener(focusListener)
+                    .build();
+            am.requestAudioFocus(focusRequest);
+        } else {
+            am.requestAudioFocus(focusListener, AudioManager.STREAM_ALARM,
+                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void abandonFocus() {
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        if (am == null) return;
+        if (Build.VERSION.SDK_INT >= 26) {
+            if (focusRequest != null) am.abandonAudioFocusRequest(focusRequest);
+            focusRequest = null;
+        } else {
+            am.abandonAudioFocus(focusListener);
+        }
+    }
+
     private void releasePlayer() {
+        abandonFocus();
         if (player != null) {
             try {
                 player.stop();

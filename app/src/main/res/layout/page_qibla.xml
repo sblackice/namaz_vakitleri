@@ -42,7 +42,7 @@
             android:id="@+id/qibla_heading"
             style="@style/Body"
             android:gravity="center"
-            android:textColor="@color/text_past"
+            android:textColor="?attr/colTextPast"
             android:textSize="16sp" />
 
         <TextView

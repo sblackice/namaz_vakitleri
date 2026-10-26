@@ -11,7 +11,7 @@
         android:id="@+id/dua_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/accent_text"
+        android:textColor="?attr/colAccentText"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
         android:layout_marginTop="10dp"
         android:gravity="start"
         android:lineSpacingMultiplier="1.35"
-        android:textColor="@color/text_main"
+        android:textColor="?attr/colText"
         android:textDirection="rtl"
         android:textSize="27sp" />
 
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingMultiplier="1.1"
-        android:textColor="@color/text_main"
+        android:textColor="?attr/colText"
         android:textSize="21sp" />
 
     <TextView
@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingMultiplier="1.1"
-        android:textColor="@color/text_main"
+        android:textColor="?attr/colText"
         android:textSize="21sp" />
 
     <TextView
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textColor="@color/text_main"
+        android:textColor="?attr/colText"
         android:textSize="18sp"
         android:textStyle="italic" />
 
@@ -64,6 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textColor="@color/text_past"
+        android:textColor="?attr/colTextPast"
         android:textSize="15sp" />
 </LinearLayout>
