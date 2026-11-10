@@ -21,9 +21,8 @@ import android.widget.TextView;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
-/** Şehir seçimi: 81 il listesi, arama kutusu ve otomatik konum. */
+/** Şehir seçimi: 81 il listesi, arama kutusu ve otomatik konum (bkz. AutoLocation). */
 public class CityActivity extends Activity {
     private static final int REQ_LOCATION = 7;
     private static final long LOCATION_TIMEOUT_MS = 30000;
@@ -48,6 +47,12 @@ public class CityActivity extends Activity {
             status.setText("Konum bulunamadı. Lütfen listeden şehrinizi seçin.");
         }
     };
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        applyOverrideConfiguration(Gorunum.config(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,14 @@ public class CityActivity extends Activity {
         findViewById(R.id.btn_city_back).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { finish(); }
         });
+        if (Prefs.autoLocation(this)) {
+            status.setText(!hasLocationPermission()
+                    ? "Otomatik konum açık ama konum izni verilmemiş. Yukarıdaki düğmeye dokunup izin verin."
+                    : !AutoLocation.locationOn(this)
+                    ? "Otomatik konum açık ama telefonun konum özelliği kapalı. Konumu açın."
+                    : "Otomatik konum AÇIK: uygulamayı her açtığınızda bulunduğunuz yere göre güncellenir."
+                    + " Listeden şehir seçerseniz otomatik konum kapanır.");
+        }
         Ui.scaleText(findViewById(R.id.city_root), Prefs.textScale(this));
     }
 
@@ -106,6 +119,7 @@ public class CityActivity extends Activity {
         int i = Cities.indexOf(name);
         if (i < 0) return;
         Prefs.setLocation(this, name, Cities.LAT[i], Cities.LON[i], Prefs.DEFAULT_TZ);
+        Prefs.setAutoLocation(this, false); // elle seçim otomatik konumu kapatır
         afterChange();
     }
 
@@ -115,12 +129,7 @@ public class CityActivity extends Activity {
         finish();
     }
 
-    private boolean hasLocationPermission() {
-        return checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
-    }
+    private boolean hasLocationPermission() { return AutoLocation.hasPermission(this); }
 
     void findMe() {
         if (!hasLocationPermission()) {
@@ -129,14 +138,7 @@ public class CityActivity extends Activity {
             return;
         }
         status.setText("Konumunuz aranıyor, lütfen bekleyin…");
-        Location best = null;
-        try {
-            for (String p : lm.getProviders(true)) {
-                Location l = lm.getLastKnownLocation(p);
-                if (l != null && (best == null || l.getTime() > best.getTime())) best = l;
-            }
-        } catch (SecurityException ignored) {
-        }
+        Location best = AutoLocation.lastKnown(this);
         if (best != null && Clock.now() - best.getTime() < 6 * 3600 * 1000L) {
             useLocation(best);
             return;
@@ -162,11 +164,8 @@ public class CityActivity extends Activity {
 
     void useLocation(Location l) {
         stopUpdates();
-        double[] dist = new double[1];
-        int i = Cities.nearest(l.getLatitude(), l.getLongitude(), dist);
-        String name = dist[0] <= 60 ? Cities.NAMES[i] + " (konumum)" : "Konumum";
-        Prefs.setLocation(this, name, l.getLatitude(), l.getLongitude(),
-                TimeZone.getDefault().getID());
+        AutoLocation.apply(this, l.getLatitude(), l.getLongitude());
+        Prefs.setAutoLocation(this, true);
         afterChange();
     }
 

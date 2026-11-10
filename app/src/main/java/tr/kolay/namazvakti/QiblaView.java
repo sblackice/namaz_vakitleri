@@ -86,7 +86,7 @@ public class QiblaView extends View {
 
         // Halka
         ring.setStrokeWidth(2.5f * density);
-        ring.setColor(0xFF4A5552);
+        ring.setColor(color(R.color.ring));
         c.drawCircle(cx, cy, r, ring);
 
         // Çentikler (telefonla birlikte döner)
@@ -95,15 +95,15 @@ public class QiblaView extends View {
             if (deg % 30 == 0) {
                 len = r * 0.075f;
                 tick.setStrokeWidth(2.2f * density);
-                tick.setColor(0xFF4A5552);
+                tick.setColor(color(R.color.ring));
             } else if (deg % 10 == 0) {
                 len = r * 0.05f;
                 tick.setStrokeWidth(1.5f * density);
-                tick.setColor(0xFF6E7875);
+                tick.setColor(color(R.color.ring_mid));
             } else {
                 len = r * 0.03f;
                 tick.setStrokeWidth(1f * density);
-                tick.setColor(0xFFA3ACA9);
+                tick.setColor(color(R.color.ring_light));
             }
             double a = Math.toRadians(deg + rot);
             float sx = (float) Math.sin(a), sy = (float) -Math.cos(a);
@@ -113,7 +113,7 @@ public class QiblaView extends View {
 
         // Yön harfleri: konumları döner, harfler hep dik durur
         text.setTextSize(r * 0.13f);
-        text.setColor(0xFF4A5552);
+        text.setColor(color(R.color.ring));
         float lr = r * 0.83f;
         for (int i = 0; i < 4; i++) {
             double a = Math.toRadians(i * 90 + rot);
@@ -122,7 +122,7 @@ public class QiblaView extends View {
             c.drawText(DIRS[i], x, y, text);
         }
 
-        // Telefonun baktığı yön: en üstte sabit turkuaz üçgen
+        // Telefonun baktığı yön: en üstte sabit üçgen
         fill.setColor(color(R.color.accent));
         path.reset();
         float tip = cy - r + 4 * density;

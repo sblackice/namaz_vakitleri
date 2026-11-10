@@ -1,9 +1,9 @@
 package tr.kolay.namazvakti;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Ana pencere. En altta 5 menü düğmesi vardır:
@@ -27,8 +28,9 @@ public class MainActivity extends Activity {
             R.id.tab_duas};
     private static final int[] TAB_LABELS = {R.string.tab_home, R.string.tab_adhan,
             R.string.tab_days, R.string.tab_qibla, R.string.tab_duas};
-    private static final int[] TAB_ICONS = {R.drawable.tab_home, R.drawable.tab_adhan,
-            R.drawable.tab_days, R.drawable.tab_qibla, R.drawable.tab_duas};
+    /** 3 boyutlu görünümlü menü simgeleri (tools/menu_simgeleri_uret.py ile çizilir). */
+    private static final int[] TAB_ICONS = {R.drawable.tab3d_home, R.drawable.tab3d_adhan,
+            R.drawable.tab3d_days, R.drawable.tab3d_qibla, R.drawable.tab3d_duas};
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Page[] pages;
@@ -36,6 +38,8 @@ public class MainActivity extends Activity {
     private int current = -1;
     private boolean resumed;
     private float appliedScale;
+    private boolean appliedDark;
+    private AutoLocation autoLocation;
 
     private final Runnable tick = new Runnable() {
         @Override public void run() {
@@ -46,10 +50,20 @@ public class MainActivity extends Activity {
     };
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        applyOverrideConfiguration(Gorunum.config(base));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         appliedScale = Prefs.textScale(this);
+        appliedDark = Prefs.darkTheme(this);
+        autoLocation = new AutoLocation(getApplicationContext(), new AutoLocation.Listener() {
+            @Override public void onPlaceChanged(String placeName) { placeChanged(placeName); }
+        });
 
         FrameLayout content = (FrameLayout) findViewById(R.id.content);
         pages = new Page[] {new HomePage(this, content), new AdhanPage(this, content),
@@ -115,10 +129,22 @@ public class MainActivity extends Activity {
     private void styleTab(View t, boolean selected) {
         t.setBackgroundResource(selected ? R.drawable.nav_selected : R.drawable.nav_normal);
         t.setSelected(selected);
-        int color = getColor(selected ? R.color.on_accent : R.color.text_main);
-        ((TextView) t.findViewById(R.id.tab_label)).setTextColor(color);
-        ((ImageView) t.findViewById(R.id.tab_icon)).setImageTintList(ColorStateList.valueOf(color));
+        ((TextView) t.findViewById(R.id.tab_label)).setTextColor(
+                getColor(selected ? R.color.accent_text : R.color.text_main));
     }
+
+    /** Otomatik konum yeni bir yer buldu: açık sayfayı yeniler ve kullanıcıya haber verir. */
+    void placeChanged(String placeName) {
+        if (resumed && current >= 0) {
+            pages[current].onHide();
+            pages[current].onShow();
+        }
+        String where = AutoLocation.OWN_PLACE.equals(placeName) ? "bulunduğunuz yere" : placeName + " iline";
+        Toast.makeText(this, "Konumunuz güncellendi. Vakitler " + where + " göre gösteriliyor.",
+                Toast.LENGTH_LONG).show();
+    }
+
+    AutoLocation autoLocation() { return autoLocation; }
 
     void askNotificationPermission() {
         if (Build.VERSION.SDK_INT >= 33
@@ -130,7 +156,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (appliedScale != Prefs.textScale(this)) {
+        if (appliedScale != Prefs.textScale(this) || appliedDark != Prefs.darkTheme(this)) {
             recreate();
             return;
         }
@@ -144,12 +170,14 @@ public class MainActivity extends Activity {
         handler.post(tick);
         AlarmScheduler.schedule(this);
         NextPrayerWidget.updateAll(this);
+        autoLocation.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         resumed = false;
+        autoLocation.stop();
         handler.removeCallbacks(tick);
         if (current >= 0) pages[current].onHide();
     }

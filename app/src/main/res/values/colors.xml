@@ -1,27 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Yüksek kontrast: koyu yazı, açık zemin, turkuaz vurgu.
-         accent (#11979A) üzerinde beyaz yazı 3,55:1 (yalnızca büyük/kalın yazı için);
-         accent_text (#0A7275) açık zeminde 5,6:1. -->
-    <color name="bg">#FFFDF7</color>
+    <!-- AÇIK görünüm: açık zemin, koyu yazı, koyu yeşil vurgu.
+         KOYU YEŞİL görünümün renkleri values-night/colors.xml dosyasındadır. -->
+    <color name="bg">#FBFAF4</color>
     <color name="surface">#FFFFFF</color>
     <color name="border">#C9C3B6</color>
     <color name="text_main">#141414</color>
     <color name="text_past">#555555</color>
-    <color name="accent">#11979A</color>
-    <color name="accent_dark">#0A7275</color>
-    <color name="accent_text">#0A7275</color>
+    <color name="accent">#1B6B45</color>
+    <color name="accent_dark">#0F4A2F</color>
+    <color name="accent_text">#14573A</color>
     <color name="on_accent">#FFFFFF</color>
-    <!-- Kapalı düğme, uyarı ve kıble seccadesi renkleri -->
+    <color name="accent_soft">#E2F0E7</color>
+    <!-- Kapalı düğme ve uyarı -->
     <color name="off">#5F5F5F</color>
     <color name="off_dark">#454545</color>
+    <color name="on_off">#FFFFFF</color>
     <color name="warn">#A11D1D</color>
-    <color name="accent_soft">#E3F4F4</color>
-    <color name="header_bg">#EAF7F7</color>
-    <color name="navy">#101F39</color>
-    <color name="title_dark">#075457</color>
-    <color name="minaret">#3F6466</color>
+    <!-- Başlık çubuğu -->
+    <color name="header_bg">#ECF5EF</color>
+    <color name="title_dark">#0C3B26</color>
+    <color name="minaret">#4A6355</color>
+    <color name="dome">#1B6B45</color>
+    <color name="dome_light">#5FB58C</color>
     <color name="gold">#C9971C</color>
-    <color name="rug">#8E1B1B</color>
-    <color name="rug_dark">#5E1010</color>
+    <!-- Geri sayım kutusu -->
+    <color name="hero_start">#22794F</color>
+    <color name="hero_end">#0F4A2F</color>
+    <color name="hero_stroke">#0F4A2F</color>
+    <color name="hero_text">#FFFFFF</color>
+    <!-- Pusula halkası -->
+    <color name="ring">#4A5552</color>
+    <color name="ring_mid">#6E7875</color>
+    <color name="ring_light">#A3ACA9</color>
+    <!-- Her iki görünümde aynı kalanlar: sistem çubukları, ana ekran bileşeni, bildirim, simge zemini -->
+    <color name="system_bar">#0A3521</color>
+    <color name="brand">#1B6B45</color>
+    <color name="brand_dark">#0F4A2F</color>
+    <color name="navy">#101F39</color>
 </resources>

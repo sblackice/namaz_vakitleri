@@ -142,7 +142,8 @@ final class HomePage extends Page {
             return;
         }
 
-        Ui.header(view, "Türkiye", Prefs.placeName(activity));
+        Ui.header(view, Prefs.autoLocation(activity) ? "Otomatik konum" : "Türkiye",
+                Prefs.placeName(activity));
         dateView.setText(Times.dateLine(activity, now));
         String hijri = Times.hijriLine(activity, now);
         hijriView.setText(hijri);

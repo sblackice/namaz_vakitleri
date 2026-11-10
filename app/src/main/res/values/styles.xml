@@ -2,11 +2,11 @@
 <resources>
     <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/bg</item>
-        <item name="android:colorPrimary">@color/accent</item>
-        <item name="android:colorPrimaryDark">@color/accent_dark</item>
+        <item name="android:colorPrimary">@color/brand</item>
+        <item name="android:colorPrimaryDark">@color/system_bar</item>
         <item name="android:colorAccent">@color/accent</item>
-        <item name="android:statusBarColor">@color/accent_dark</item>
-        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="android:statusBarColor">@color/system_bar</item>
+        <item name="android:navigationBarColor">@color/system_bar</item>
     </style>
 
     <style name="BigButton" parent="@android:style/Widget.Material.Button">
@@ -47,6 +47,7 @@
 
     <style name="OffButton" parent="BigButton">
         <item name="android:background">@drawable/button_off</item>
+        <item name="android:textColor">@color/on_off</item>
     </style>
 
     <style name="Section">

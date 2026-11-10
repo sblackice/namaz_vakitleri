@@ -9,14 +9,14 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center"
-    android:minHeight="70dp"
+    android:minHeight="68dp"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:padding="3dp">
 
     <ImageView
         android:id="@+id/tab_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:importantForAccessibility="no" />
 
     <TextView

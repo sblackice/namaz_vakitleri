@@ -79,11 +79,24 @@ public class CityActivityTest {
         l.setTime(Clock.now() - 60000);
         shadowOf(lm).setLastKnownLocation(LocationManager.NETWORK_PROVIDER, l);
 
+        java.util.TimeZone saved = java.util.TimeZone.getDefault();
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Europe/Istanbul"));
         CityActivity a = Robolectric.buildActivity(CityActivity.class).setup().get();
         a.findViewById(R.id.btn_find_me).performClick();
-        assertEquals("Konya (konumum)", Prefs.placeName(app));
+        java.util.TimeZone.setDefault(saved);
+        assertEquals("Konya", Prefs.placeName(app));
         assertEquals(37.88, Prefs.lat(app), 1e-9);
+        assertTrue("otomatik konum açılmalı", Prefs.autoLocation(app));
         assertTrue(a.isFinishing());
+    }
+
+    @Test
+    public void listedenSehirSecmekOtomatikKonumuKapatir() {
+        Prefs.setAutoLocation(app, true);
+        CityActivity a = Robolectric.buildActivity(CityActivity.class).setup().get();
+        a.choose("Trabzon");
+        assertEquals("Trabzon", Prefs.placeName(app));
+        assertTrue(!Prefs.autoLocation(app));
     }
 
     @Test

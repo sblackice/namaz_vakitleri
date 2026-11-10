@@ -141,6 +141,7 @@ final class AdhanPage extends Page {
             boolean on = Prefs.adhanOn(activity, PRAYERS[k]);
             toggles[k].setText(on ? "AÇIK ✔" : "KAPALI");
             toggles[k].setBackgroundResource(on ? R.drawable.button : R.drawable.button_off);
+            toggles[k].setTextColor(activity.getColor(on ? R.color.on_accent : R.color.on_off));
         }
         String uri = Prefs.adhanUri(activity);
         if (uri == null) {

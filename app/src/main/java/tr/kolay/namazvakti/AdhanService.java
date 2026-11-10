@@ -110,12 +110,25 @@ public class AdhanService extends Service {
             finish(true);
             return START_NOT_STICKY;
         }
-        title = intent == null ? "" : String.valueOf(intent.getStringExtra(EXTRA_TITLE));
-        text = intent == null ? "" : String.valueOf(intent.getStringExtra(EXTRA_TEXT));
+        title = extra(intent, EXTRA_TITLE);
+        text = extra(intent, EXTRA_TEXT);
         test = intent != null && intent.getBooleanExtra(EXTRA_TEST, false);
         startInForeground();
-        if (!play()) finish(true);
+        if (!play()) {
+            // Ses dosyası açılamadı (silinmiş, taşınmış ya da izni kalkmış olabilir):
+            // vakit sessiz geçmesin diye telefonun bildirim sesiyle normal bildirim gösterilir.
+            boolean wasTest = test;
+            String t = title, x = text;
+            test = true; // "ezan" kanalında sessiz bir bildirim bırakılmasın
+            finish(true);
+            if (!wasTest && t.length() > 0) Notifier.show(this, t, x);
+        }
         return START_NOT_STICKY;
+    }
+
+    private static String extra(Intent intent, String key) {
+        String v = intent == null ? null : intent.getStringExtra(key);
+        return v == null ? "" : v;
     }
 
     private void startInForeground() {
@@ -177,7 +190,7 @@ public class AdhanService extends Service {
                 .setContentText(withStop ? "Ezan okunuyor. Durdurmak için “Durdur”a dokunun." : text)
                 .setCategory(Notification.CATEGORY_ALARM)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setColor(getColor(R.color.accent))
+                .setColor(getColor(R.color.brand))
                 .setContentIntent(withStop ? stop : open)
                 .setAutoCancel(!withStop)
                 .setOngoing(withStop);

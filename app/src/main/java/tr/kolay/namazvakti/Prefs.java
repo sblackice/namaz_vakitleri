@@ -34,6 +34,18 @@ final class Prefs {
                 .apply();
     }
 
+    /** Otomatik konum: uygulama her açıldığında bulunulan yere göre güncellensin mi? */
+    static boolean autoLocation(Context c) { return sp(c).getBoolean("autoLoc", false); }
+
+    static void setAutoLocation(Context c, boolean on) {
+        sp(c).edit().putBoolean("autoLoc", on).apply();
+    }
+
+    /** Görünüm: true = Koyu Yeşil (varsayılan), false = Açık. */
+    static boolean darkTheme(Context c) { return sp(c).getBoolean("dark", true); }
+
+    static void setDarkTheme(Context c, boolean on) { sp(c).edit().putBoolean("dark", on).apply(); }
+
     /** Bu vakit girince ezan/bildirim olsun mu? Güneş bir namaz vakti değildir, varsayılanı kapalı. */
     static boolean adhanOn(Context c, int i) {
         return sp(c).getBoolean("adhan" + i, i != PrayerCalc.GUNES);

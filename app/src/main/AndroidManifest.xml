@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tr.kolay.namazvakti"
-    android:versionCode="3"
-    android:versionName="2.1">
+    android:versionCode="4"
+    android:versionName="2.2">
 
     <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="34" />
 
@@ -15,7 +15,7 @@
     <!-- Seçilen ezan ses dosyasını çalan servis için (Android 9+ ve 14+). -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <!-- Konum yalnızca "Konumumu Otomatik Bul" düğmesine basınca bir kez kullanılır. -->
+    <!-- Konum yalnızca kullanıcı otomatik konumu açtıysa ve uygulama ekrandayken okunur; arka planda konum izni yoktur. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 

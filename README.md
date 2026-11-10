@@ -6,9 +6,34 @@ Yaşlıların da rahatça kullanabileceği, **büyük yazılı ve sade** bir nam
 <img src="docs/ekran-goruntuleri/1-ana-ekran.png" width="200"> <img src="docs/ekran-goruntuleri/1b-ana-ekran-gunun-hadisi.png" width="200"> <img src="docs/ekran-goruntuleri/5-ezan-ve-izinler.png" width="200">
 <img src="docs/ekran-goruntuleri/7-dini-gunler.png" width="200"> <img src="docs/ekran-goruntuleri/8-dini-gun-detay.png" width="200"> <img src="docs/ekran-goruntuleri/6-kible.png" width="200"> <img src="docs/ekran-goruntuleri/6b-kible-hizali.png" width="200"> <img src="docs/ekran-goruntuleri/9-dualar.png" width="200">
 
+## 2.2 sürümünde neler değişti?
+
+- **Otomatik konum.** Şehir seçme sayfasında **"Konumumu Otomatik Bul ve Takip Et"** düğmesine bir kez basın.
+  Bundan sonra uygulamayı her açtığınızda telefon konumuna bakar; başka bir şehre gittiyseniz vakitler,
+  alarmlar ve Kıble açısı kendiliğinden oraya göre güncellenir (5 km'den az yer değiştirmede bir şey yapılmaz).
+  - Konum **yalnızca uygulama ekrandayken** okunur; arka planda konum izni istenmez. Yani başka şehre
+    gidince uygulamayı **bir kez açmanız** gerekir; açmadan önce ezan eski şehrin vaktinde okunur.
+  - Konum telefondan dışarı gönderilmez (uygulamanın internet izni yoktur).
+  - Başlıkta en yakın **il merkezinin** adı yazar (100 km'den uzaksa veya yurt dışındaysanız "Konumum").
+    Vakitler ise tam bulunduğunuz noktaya göre hesaplanır.
+  - Listeden elle şehir seçerseniz otomatik konum kapanır.
+- **Koyu yeşil görünüm (varsayılan).** Koyu yeşil zemin, krem yazı, altın vurgular. İsteyen
+  **Ezan → Yazı Boyutu ve Vakit Düzeltme → "Görünüm"** düğmesinden **Açık** görünüme (açık zemin, koyu yeşil vurgu) geçebilir.
+  Karşıtlık oranları ([WCAG 2.1](https://www.w3.org/TR/WCAG21/#contrast-minimum) ölçüsüyle): koyu görünümde yazı/zemin 14,39:1,
+  altın düğme üzerindeki yazı 8,65:1; açık görünümde yeşil üzerinde beyaz yazı 6,49:1.
+- **3 boyutlu görünümlü menü simgeleri.** Alt menüdeki 5 simge kabartmalı ve gölgeli olarak yeniden çizildi
+  (ev, cami, hilal-yıldız, Kâbe, kitap). Hazır resim değil; `tools/menu_simgeleri_uret.py` ile kodla üretilir.
+- **Düzeltilen hatalar:**
+  - Seçilen ezan dosyası silinmiş veya açılamıyorsa vakit **sessiz** geçiyordu; artık telefonun bildirim sesiyle bildirim gelir.
+  - Telefonun alt gezinme çubuğu açık temada beyaz zemin üzerinde beyaz düğmelerle görünmez kalabiliyordu; koyu renge alındı.
+  - Konumla bulunan yerde başlıkta her zaman "TÜRKİYE" yazıyordu (yurt dışında da); artık "OTOMATİK KONUM" yazar.
+  - Otomatik konumda telefonun saat dilimi değişince (yurt dışına çıkış) vakitler eski saat diliminde kalıyordu.
+
+<img src="docs/ekran-goruntuleri/11-acik-gorunum-ana-ekran.png" width="200"> <img src="docs/ekran-goruntuleri/1d-ana-ekran-otomatik-konum.png" width="200">
+
 ## 2.1 sürümünde neler değişti?
 
-- **Renkler turkuaz oldu.** Ana renk `#11979A`, yazılar ve ince ayrıntılar için koyu turkuaz `#0A7275`.
+- **Renkler turkuaz oldu** (2.2'de koyu yeşile çevrildi). Ana renk `#11979A`, yazılar ve ince ayrıntılar için koyu turkuaz `#0A7275`.
   Örnek görseldeki açık turkuaz (`#1FB5B7`) üzerinde beyaz yazının karşıtlığı 2,51:1'dir. Bu oran, [WCAG 2.1](https://www.w3.org/TR/WCAG21/#contrast-minimum)
   okunabilirlik kuralının büyük yazılar için istediği 3:1'in altında kalır. Bu yüzden biraz daha koyu bir turkuaz seçildi
   (beyaz yazıyla 3,55:1; koyu turkuaz yazı, beyaz zeminde 5,71:1).
@@ -33,7 +58,7 @@ Yaşlıların da rahatça kullanabileceği, **büyük yazılı ve sade** bir nam
 4. **Yükle**'ye basın. Google Play Protect uyarı verirse **"Yine de yükle"** deyin (uygulama Google Play'den gelmediği için bu uyarı normaldir).
 5. Uygulamayı açın, şehrinizi seçin. Bildirim izni sorulursa **İzin ver** deyin.
 
-> **2.0 sürümü kuruluysa:** 2.1 aynı anahtarla imzalandı, doğrudan üzerine kurulur. Ayarlarınız silinmez.
+> **2.0 veya 2.1 sürümü kuruluysa:** 2.2 aynı anahtarla imzalandı, doğrudan üzerine kurulur. Ayarlarınız silinmez.
 >
 > **1.0 sürümü kuruluysa:** Bu sürüm farklı bir imza anahtarıyla imzalandı. Telefon "uygulama yüklenmedi"
 > derse önce eski Kolay Namaz Vakti'yi kaldırın (uygulama simgesine basılı tutun → **Kaldır**), sonra yeniden yükleyin.
@@ -42,7 +67,7 @@ Yaşlıların da rahatça kullanabileceği, **büyük yazılı ve sade** bir nam
 **Gereken:** Android 7.0 veya daha yeni bir telefon.
 
 APK dosyasının SHA-256 özeti (dosyanın bozulmadığını kontrol etmek isteyenler için):
-`477aff5649dea24f4cb54e84cd9791c344ce51f475fdda056a4189c905ac5f84`
+`46ed823962645c03f5fbe1c2b2212a9612b44ef0f02918ccbfc9da11a0ec7156`
 
 ## Neler var?
 
@@ -51,9 +76,9 @@ Ekranın en altında 5 büyük menü düğmesi vardır:
 | Düğme | Ne yapar? |
 |---|---|
 | **Ana Sayfa** | Sıradaki vakte kalan süre büyük yazıyla sayılır (ör. `00:39:00` = saat:dakika:saniye). Altında bugünün 6 vakti (İmsak, Güneş, Öğle, İkindi, Akşam, Yatsı). Sayfayı **aşağı kaydırınca** her gün değişen **"Günün Hadisi"** çıkar. |
-| **Ezan** | Her vakit için ezanı **açıp kapatma**, ezan ses dosyası seçme ve deneme, vakitten önce hatırlatma ve ezanın zamanında okunması için gereken **izinlerin durumu** (turkuaz ✔ / kırmızı ✖ ve düzeltme düğmesi). Yazı boyutu ve dakika düzeltmesi de buradan açılır. |
+| **Ezan** | Her vakit için ezanı **açıp kapatma**, ezan ses dosyası seçme ve deneme, vakitten önce hatırlatma ve ezanın zamanında okunması için gereken **izinlerin durumu** (✔ / kırmızı ✖ ve düzeltme düğmesi). Yazı boyutu ve dakika düzeltmesi de buradan açılır. |
 | **Dini Günler** | Yaklaşan dini gün ve geceler tarih sırasıyla, "kaç gün kaldı" bilgisiyle. Birine dokununca **bilgi sayfası** açılır (ne olduğu, ilgili ayet ve hadisler, kaynakları). |
-| **Kıble** | Pusula halkasının ortasında Kâbe yönüne dönen desenli bir **seccade**, üstünde Kâbe ve beyaz ok. Ok, en üstteki turkuaz üçgenle aynı hizaya gelince "✓ Kıble yönündesiniz." yazar; değilse "Sağa/Sola doğru dönün (… °)" diye yol gösterir. Pusula ayarı bozuksa telefonu havada 8 çizer gibi sallamanızı söyler. |
+| **Kıble** | Pusula halkasının ortasında Kâbe yönüne dönen desenli bir **seccade**, üstünde Kâbe ve beyaz ok. Ok, en üstteki üçgenle aynı hizaya gelince "✓ Kıble yönündesiniz." yazar; değilse "Sağa/Sola doğru dönün (… °)" diye yol gösterir. Pusula ayarı bozuksa telefonu havada 8 çizer gibi sallamanızı söyler. |
 | **Dualar** | Namazda okunan dualar sırayla, **en başta Fâtiha Sûresi**. Her biri için: **adı, Arapça yazılışı, Türkçe okunuşu, Türkçe anlamı**, nerede okunduğu ve kaynağı. Vitir (Kunut) duaları, kısa sûreler (Fîl'den Nâs'a) ve namazdan sonra okunanlar da vardır. |
 
 Ayrıca: ana ekran bileşeni (widget), telefon yeniden açılınca alarmların kendiliğinden kurulması, 3 yazı boyutu, her vakit için −30…+30 dakika düzeltme.
@@ -90,6 +115,7 @@ Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa:
 - Uygulama "Zorla durdur" yapılırsa ezan ve bildirimler, uygulama tekrar açılana kadar gelmez (Android kuralı).
 - Hicri tarih (ana ekran) Ümmü'l-Kurâ takvimine göredir; Diyanet takviminden 1 gün farklı olabilir.
 - Dini gün listesi 2028 sonuna kadardır.
+- Otomatik konum **gerçek bir telefonda denenmedi**; yalnızca otomatik testlerde (taklit konumla) doğrulandı.
 - Kıble pusulası telefonun manyetik sensörüyle çalışır. Hesap otomatik testlerde (düz, eğik, dik, yan tutuş ve jiroskopsuz telefon)
   doğrulandı, ancak **gerçek bir telefonda denenmedi**. Metal eşyalar, mıknatıslı kılıflar ve hoparlörler pusulayı şaşırtabilir.
 - APK, bu depodaki kodla geliştirme ortamında üretilen bir anahtarla imzalanmıştır. Sonraki sürümler farklı anahtarla imzalanırsa
@@ -103,7 +129,7 @@ Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa:
 #   https://repo1.maven.org/maven2/org/robolectric/android-all/14-robolectric-10818077/
 ANDROID_JAR=/yol/android-all-14-robolectric-10818077.jar ./build.sh     # → build/KolayNamazVakti.apk
 
-# Otomatik testler (telefon gerekmez, Robolectric ile; 57 test, ekran görüntülerini de üretir):
+# Otomatik testler (telefon gerekmez, Robolectric ile; 66 test, ekran görüntülerini de üretir):
 ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
 ```
 
@@ -114,6 +140,7 @@ ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
 - `tools/robotest` — otomatik testler; ekran görüntülerini `docs/ekran-goruntuleri` içine yazar.
 - `tools/hadis_dogrula.py` — Günün Hadisi listesini hadis veritabanıyla karşılaştırır.
 - `tools/kuran_metni_uret.py` — `KuranMetni.java` dosyasını Kur'an verisinden üretir.
+- `tools/menu_simgeleri_uret.py` — alt menünün 3 boyutlu görünümlü simgelerini kodla çizer (Python + Pillow + numpy).
 - `tools/seccade_uret.py` — Kıble sayfasındaki seccade ve Kâbe resimlerini (`res/drawable-nodpi`) kodla çizer (Python + Pillow).
 - `tools/simge_uret.py` — uygulama simgelerini (`res/mipmap-*`) `docs/logo/uygulama-logosu-kaynak.jpg` dosyasındaki logodan üretir.
 - `tools/referans_uret.js` — adhan kütüphanesinden vakit karşılaştırma verisi üretir.

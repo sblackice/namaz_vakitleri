@@ -1,6 +1,7 @@
 package tr.kolay.namazvakti;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -10,6 +11,12 @@ import java.util.TimeZone;
 /** Bir dini gün veya gece hakkında bilgi sayfası. */
 public class DayDetailActivity extends Activity {
     static final String EXTRA_INDEX = "index";
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        applyOverrideConfiguration(Gorunum.config(base));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

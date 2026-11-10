@@ -84,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:textColor="@color/on_accent"
+                        android:textColor="@color/hero_text"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                         android:fontFeatureSettings="tnum"
                         android:gravity="center"
                         android:includeFontPadding="false"
-                        android:textColor="@color/on_accent"
+                        android:textColor="@color/hero_text"
                         android:textSize="56sp"
                         android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center"
-                        android:textColor="@color/on_accent"
+                        android:textColor="@color/hero_text"
                         android:textSize="19sp"
                         android:textStyle="bold" />
                 </LinearLayout>

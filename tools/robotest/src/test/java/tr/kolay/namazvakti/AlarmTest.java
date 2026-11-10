@@ -143,7 +143,7 @@ public class AlarmTest {
     }
 
     @Test
-    public void ezanServisiDosyaYoksaKendiniDurdururVeBildirimBirakir() {
+    public void ezanServisiDosyaYoksaSesliBildirimeDoner() {
         Intent i = new Intent(app, AdhanService.class).setAction(AdhanService.ACTION_PLAY)
                 .putExtra(AdhanService.EXTRA_TITLE, "Akşam vakti girdi")
                 .putExtra(AdhanService.EXTRA_TEXT, "Akşam namazı vakti: 18:00");
@@ -151,9 +151,12 @@ public class AlarmTest {
                 .startCommand(0, 1).get();
         assertTrue(shadowOf(svc).isStoppedBySelf());
         assertFalse(AdhanService.playing);
-        Notification n = shadowOf(nm).getNotification(AdhanService.NOTIFICATION_ID);
+        // Sessiz "ezan" bildirimi kalmaz; onun yerine sesli normal vakit bildirimi gösterilir.
+        assertTrue(shadowOf(nm).getNotification(AdhanService.NOTIFICATION_ID) == null);
+        Notification n = shadowOf(nm).getNotification(Notifier.NOTIFICATION_ID);
         assertNotNull(n);
         assertEquals("Akşam vakti girdi", n.extras.getString(Notification.EXTRA_TITLE));
+        assertEquals(Notifier.CHANNEL_ID, n.getChannelId());
     }
 
     @Test
