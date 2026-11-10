@@ -1,7 +1,6 @@
 package tr.kolay.namazvakti;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +10,12 @@ import android.widget.TextView;
 
 /** Diğer ayarlar: yazı boyutu ve her vakit için dakika düzeltmesi. */
 public class SettingsActivity extends Activity {
-    private Button scaleBtn, themeBtn;
+    private Button scaleBtn;
     private final TextView[] offsetValues = new TextView[PrayerCalc.COUNT];
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        applyOverrideConfiguration(Gorunum.config(base));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Tema.uygula(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Ui.header(findViewById(R.id.settings_page), "Kolay Namaz Vakti", "Diğer Ayarlar");
@@ -35,13 +29,6 @@ public class SettingsActivity extends Activity {
                 }
                 Prefs.setTextScale(SettingsActivity.this,
                         Prefs.SCALE_CHOICES[(idx + 1) % Prefs.SCALE_CHOICES.length]);
-                recreate();
-            }
-        });
-        themeBtn = (Button) findViewById(R.id.btn_theme);
-        themeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                Prefs.setDarkTheme(SettingsActivity.this, !Prefs.darkTheme(SettingsActivity.this));
                 recreate();
             }
         });
@@ -86,7 +73,6 @@ public class SettingsActivity extends Activity {
         float s = Prefs.textScale(this);
         String size = s < 1.1f ? "Büyük" : (s < 1.3f ? "Daha büyük" : "En büyük");
         scaleBtn.setText("Yazı boyutu: " + size);
-        themeBtn.setText("Görünüm: " + (Prefs.darkTheme(this) ? "Koyu Yeşil" : "Açık"));
         int[] off = Prefs.offsets(this);
         for (int i = 0; i < off.length; i++) {
             offsetValues[i].setText(off[i] > 0 ? "+" + off[i] : String.valueOf(off[i]));

@@ -233,7 +233,21 @@ def duas():
     c.save("tab3d_duas")
 
 
+def menu():
+    """Menü: 2x2 yuvarlak köşeli karo (yeşil, altın, krem, yeşil)."""
+    c = Canvas()
+    cols = [EMERALD, GOLD, CREAM, EMERALD_DARK]
+    k = 0
+    for row in range(2):
+        for col in range(2):
+            x0, y0 = 120 + col * 280, 120 + row * 280
+            c.part(rrect((x0, y0, x0 + 248, y0 + 248), 56), cols[k], bevel=20, depth=1.3)
+            k += 1
+    c.save("tab3d_menu")
+
+
 if __name__ == "__main__":
+    menu()
     home()
     mosque()
     days()

@@ -3,7 +3,7 @@
     android:id="@+id/settings_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
+    android:background="?attr/colBg"
     android:orientation="vertical">
 
     <include layout="@layout/view_header" />
@@ -22,12 +22,6 @@
 
         <Button
             android:id="@+id/btn_scale"
-            style="@style/BigButton"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="10dp" />
-
-        <Button
-            android:id="@+id/btn_theme"
             style="@style/BigButton"
             android:layout_width="match_parent"
             android:layout_marginBottom="16dp" />

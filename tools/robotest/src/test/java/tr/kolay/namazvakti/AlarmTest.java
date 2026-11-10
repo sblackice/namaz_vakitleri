@@ -37,6 +37,7 @@ public class AlarmTest {
         alarms = shadowOf((AlarmManager) app.getSystemService(Context.ALARM_SERVICE));
         nm = (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
         TestUtil.setCity(app, "Ankara");
+        Prefs.clearAdhanSound(app); // eski davranış: bildirim sesi
         Clock.fixedNow = TestUtil.istanbul(2026, 10, 15, 12, 0);
     }
 
@@ -193,5 +194,38 @@ public class AlarmTest {
         AlarmScheduler.schedule(app);
         long tomorrowImsak = Times.forDay(app, Clock.now(), 1)[PrayerCalc.IMSAK];
         assertEquals(tomorrowImsak, alarms.peekNextScheduledAlarm().getTriggerAtMs());
+    }
+
+    @Test
+    public void hazirEzanSesiHerZamanOkunabilir() {
+        Prefs.setAdhanSound(app, "android.resource://tr.kolay.namazvakti/raw/ezan_ornek", "Hazır ezan");
+        assertTrue(AdhanPage.soundFileReadable(app));
+    }
+
+    @Test
+    public void kesinAlarmIzniVerilinceAlarmYenidenKurulur() {
+        Intent i = new Intent("android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED")
+                .setPackage(app.getPackageName());
+        assertTrue("izin değişikliği dinlenmeli",
+                !app.getPackageManager().queryBroadcastReceivers(i, 0).isEmpty());
+        new BootReceiver().onReceive(app, i);
+        assertEquals(today()[PrayerCalc.OGLE], alarms.peekNextScheduledAlarm().getTriggerAtMs());
+    }
+
+    @Test
+    public void ilkKurulumdaHazirEzanSecilidir() {
+        app.getSharedPreferences("ayarlar", Context.MODE_PRIVATE).edit().remove("adhanUri").apply();
+        String uri = Prefs.adhanUri(app);
+        assertEquals("android.resource://tr.kolay.namazvakti/raw/ezan_1", uri);
+        assertEquals("Ezan 1 (30 sn)", Prefs.adhanName(app));
+        assertEquals(3, Ezanlar.mevcut(app).size());
+        AlarmScheduler.schedule(app);
+        fire();
+        Intent started = shadowOf(app).getNextStartedService();
+        assertNotNull("varsayılan ezan çalmalı", started);
+        assertEquals(AdhanService.ACTION_PLAY, started.getAction());
+        // "Telefonun bildirim sesi" seçilince ezan değil bildirim sesi çalar
+        Prefs.clearAdhanSound(app);
+        assertNull(Prefs.adhanUri(app));
     }
 }

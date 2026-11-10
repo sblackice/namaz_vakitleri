@@ -177,16 +177,17 @@ public class MainActivityTest {
     }
 
     @Test
-    public void altMenudeBesDugmeVarVeSayfaDegisir() {
+    public void altMenudeAltiDugmeVarVeSayfaDegisir() {
         TestUtil.setCity(app, "Ankara");
         MainActivity a = start();
         LinearLayout nav = (LinearLayout) a.findViewById(R.id.bottom_nav);
-        assertEquals(5, nav.getChildCount());
-        String[] labels = {"Ana Sayfa", "Ezan", "Dini Günler", "Kıble", "Dualar"};
-        for (int k = 0; k < 5; k++) {
+        assertEquals(6, nav.getChildCount());
+        String[] labels = {"Ana Sayfa", "Ezan", "Dini Günler", "Kıble", "Dualar", "Menü"};
+        for (int k = 0; k < 6; k++) {
             assertEquals(labels[k], ((TextView) nav.getChildAt(k).findViewById(R.id.tab_label))
                     .getText().toString());
         }
+        assertEquals("Menü en sağda olmalı", R.id.tab_menu, nav.getChildAt(5).getId());
         assertEquals(View.VISIBLE, a.findViewById(R.id.root).getVisibility());
         a.findViewById(R.id.tab_duas).performClick();
         assertEquals(MainActivity.DUAS, a.currentTab());

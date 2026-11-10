@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Geri sayım kutusu: yukarıdan aşağı koyulaşan yeşil, ince çerçeve -->
+<!-- Geri sayım kutusu: yukarıdan aşağı koyulaşan renk, ince çerçeve -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <gradient android:angle="270" android:startColor="@color/hero_start" android:endColor="@color/hero_end" />
-    <stroke android:width="2dp" android:color="@color/hero_stroke" />
+    <gradient android:angle="270" android:startColor="?attr/colHeroStart" android:endColor="?attr/colHeroEnd" />
+    <stroke android:width="2dp" android:color="?attr/colHeroStroke" />
     <corners android:radius="16dp" />
 </shape>

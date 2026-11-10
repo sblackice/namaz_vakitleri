@@ -22,12 +22,19 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Şehir seçimi: 81 il listesi, arama kutusu ve otomatik konum (bkz. AutoLocation). */
+/**
+ * Şehir seçimi: önce 81 il, bir ile dokununca o ilin ilçeleri (vakitler ilçenin kendi
+ * konumuna göre hesaplanır). Arama kutusu hem il hem ilçe bulur. Otomatik konum da vardır.
+ */
 public class CityActivity extends Activity {
     private static final int REQ_LOCATION = 7;
     private static final long LOCATION_TIMEOUT_MS = 30000;
 
+    /** Listedeki satırlar: il sırası ve ilçe sırası (il merkezi için -1). */
     private final List<String> shown = new ArrayList<String>();
+    private final List<int[]> shownRefs = new ArrayList<int[]>();
+    private int openIl = -1; // ilçeleri gösterilen il (-1: il listesi)
+    private EditText search;
     private ArrayAdapter<String> adapter;
     private TextView status;
     private LocationManager lm;
@@ -49,13 +56,8 @@ public class CityActivity extends Activity {
     };
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        applyOverrideConfiguration(Gorunum.config(base));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Tema.uygula(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city);
         Ui.header(findViewById(R.id.city_page), "Kolay Namaz Vakti", getString(R.string.city_title));
@@ -68,11 +70,11 @@ public class CityActivity extends Activity {
         filter("");
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                choose(shown.get(pos));
+                tap(pos);
             }
         });
 
-        EditText search = (EditText) findViewById(R.id.city_search);
+        search = (EditText) findViewById(R.id.city_search);
         search.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
             @Override public void onTextChanged(CharSequence s, int a, int b, int c) {}
@@ -83,15 +85,15 @@ public class CityActivity extends Activity {
             @Override public void onClick(View v) { findMe(); }
         });
         findViewById(R.id.btn_city_back).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { finish(); }
+            @Override public void onClick(View v) { back(); }
         });
         if (Prefs.autoLocation(this)) {
-            status.setText(!hasLocationPermission()
+            status.setText(!AutoLocation.hasPermission(this)
                     ? "Otomatik konum açık ama konum izni verilmemiş. Yukarıdaki düğmeye dokunup izin verin."
                     : !AutoLocation.locationOn(this)
                     ? "Otomatik konum açık ama telefonun konum özelliği kapalı. Konumu açın."
                     : "Otomatik konum AÇIK: uygulamayı her açtığınızda bulunduğunuz yere göre güncellenir."
-                    + " Listeden şehir seçerseniz otomatik konum kapanır.");
+                    + " Listeden yer seçerseniz otomatik konum kapanır.");
         }
         Ui.scaleText(findViewById(R.id.city_root), Prefs.textScale(this));
     }
@@ -104,23 +106,107 @@ public class CityActivity extends Activity {
         return t.replaceAll("\\p{M}", "").trim();
     }
 
+    static final String ARROW = "  ›";
+
+    /** Liste: arama boşsa iller (veya açık ilin ilçeleri); doluysa eşleşen il ve ilçeler. */
     void filter(String q) {
         String sq = simplify(q);
         shown.clear();
-        for (String n : Cities.NAMES) {
-            if (sq.length() == 0 || simplify(n).startsWith(sq) || simplify(n).contains(sq)) {
-                shown.add(n);
+        shownRefs.clear();
+        if (sq.length() == 0 && openIl >= 0) {
+            String il = Cities.NAMES[openIl];
+            add(il + " (il merkezi)", openIl, -1);
+            for (int k = 0; k < Ilceler.AD.length; k++) {
+                if (Ilceler.IL[k] == openIl && !Ilceler.AD[k].equals("Merkez")) add(Ilceler.AD[k], openIl, k);
+            }
+        } else {
+            for (int i = 0; i < Cities.NAMES.length; i++) {
+                if (sq.length() == 0 || simplify(Cities.NAMES[i]).contains(sq)) add(Cities.NAMES[i] + ARROW, i, -1);
+            }
+            if (sq.length() >= 2) {
+                for (int k = 0; k < Ilceler.AD.length; k++) {
+                    String n = Ilceler.AD[k];
+                    if (!n.equals("Merkez") && simplify(n).contains(sq)) {
+                        add(n + " – " + Cities.NAMES[Ilceler.IL[k]], Ilceler.IL[k], k);
+                    }
+                }
             }
         }
         adapter.notifyDataSetChanged();
+        String title = openIl >= 0 && sq.length() == 0 ? Cities.NAMES[openIl] + " ilçeleri"
+                : getString(R.string.city_title);
+        Ui.header(findViewById(R.id.city_page), "Kolay Namaz Vakti", title);
     }
+
+    private void add(String text, int il, int ilce) {
+        shown.add(text);
+        shownRefs.add(new int[] {il, ilce});
+    }
+
+    /** Listeden bir satır seçildi. */
+    void tap(int pos) {
+        int[] r = shownRefs.get(pos);
+        boolean listingIlce = openIl >= 0 && search.getText().length() == 0;
+        if (r[1] < 0 && !listingIlce) {
+            // İle dokunuldu: ilçeleri aç.
+            openIl = r[0];
+            search.setText("");
+            filter("");
+            ((ListView) findViewById(R.id.city_list)).setSelection(0);
+            return;
+        }
+        if (r[1] < 0) {
+            chooseIl(r[0]);
+        } else {
+            chooseIlce(r[1]);
+        }
+    }
+
+    void back() {
+        if (openIl >= 0) {
+            openIl = -1;
+            search.setText("");
+            filter("");
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onBackPressed() { back(); }
 
     void choose(String name) {
         int i = Cities.indexOf(name);
-        if (i < 0) return;
-        Prefs.setLocation(this, name, Cities.LAT[i], Cities.LON[i], Prefs.DEFAULT_TZ);
+        if (i >= 0) chooseIl(i);
+    }
+
+    void chooseIl(int i) {
+        Prefs.setLocation(this, Cities.NAMES[i], Cities.LAT[i], Cities.LON[i], Prefs.DEFAULT_TZ);
         Prefs.setAutoLocation(this, false); // elle seçim otomatik konumu kapatır
         afterChange();
+    }
+
+    void chooseIlce(int k) {
+        Prefs.setLocation(this, Ilceler.AD[k] + ", " + Cities.NAMES[Ilceler.IL[k]],
+                Ilceler.LAT[k], Ilceler.LON[k], Prefs.DEFAULT_TZ);
+        Prefs.setAutoLocation(this, false);
+        afterChange();
+    }
+
+    /** Bir noktaya en yakın ilçe ("Merkez" ilçeleri hariç; onlar il merkezi sayılır). */
+    static int nearestIlce(double lat, double lon, double[] distanceKmOut) {
+        int best = -1;
+        double bd = Double.MAX_VALUE;
+        for (int k = 0; k < Ilceler.AD.length; k++) {
+            double d = Cities.distanceKm(lat, lon, Ilceler.LAT[k], Ilceler.LON[k]);
+            if (d < bd) {
+                bd = d;
+                best = k;
+            }
+        }
+        if (distanceKmOut != null) distanceKmOut[0] = bd;
+        return best;
     }
 
     private void afterChange() {
@@ -129,7 +215,12 @@ public class CityActivity extends Activity {
         finish();
     }
 
-    private boolean hasLocationPermission() { return AutoLocation.hasPermission(this); }
+    private boolean hasLocationPermission() {
+        return checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
 
     void findMe() {
         if (!hasLocationPermission()) {
@@ -138,7 +229,14 @@ public class CityActivity extends Activity {
             return;
         }
         status.setText("Konumunuz aranıyor, lütfen bekleyin…");
-        Location best = AutoLocation.lastKnown(this);
+        Location best = null;
+        try {
+            for (String p : lm.getProviders(true)) {
+                Location l = lm.getLastKnownLocation(p);
+                if (l != null && (best == null || l.getTime() > best.getTime())) best = l;
+            }
+        } catch (SecurityException ignored) {
+        }
         if (best != null && Clock.now() - best.getTime() < 6 * 3600 * 1000L) {
             useLocation(best);
             return;

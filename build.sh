@@ -12,7 +12,7 @@ rm -rf "$OUT" && mkdir -p "$OUT/gen" "$OUT/classes"
 
 echo "1/5 Kaynaklar (aapt)"
 aapt package -f -m --auto-add-overlay \
-  -M "$APP/AndroidManifest.xml" -S "$APP/res" -I "$ANDROID_JAR" \
+  -M "$APP/AndroidManifest.xml" -S "$APP/res" -A "$APP/assets" -I "$ANDROID_JAR" \
   -J "$OUT/gen" -F "$OUT/res.apk" \
   --min-sdk-version 24 --target-sdk-version 34
 

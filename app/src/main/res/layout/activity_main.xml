@@ -1,17 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Ana pencere: üstte seçili sayfa, en altta 5 menü düğmesi. -->
+<!-- Ana pencere: üstte seçili sayfa, en altta 6 menü düğmesi. En sağdaki "Menü" düğmesi,
+     sayfanın üzerinde aşağıdan yukarı açılan bir panel gösterir. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
+    android:background="?attr/colBg"
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/menu_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/menu_scrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colScrim"
+                android:clickable="true"
+                android:contentDescription="@string/menu_close"
+                android:focusable="true" />
+
+            <LinearLayout
+                android:id="@+id/menu_panel"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/menu_panel"
+                android:clickable="true"
+                android:elevation="8dp"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="6dp"
+                    android:text="@string/tab_menu"
+                    android:textColor="?attr/colAccentText"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/menu_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/bottom_nav"
@@ -19,8 +72,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/nav_bar"
         android:orientation="horizontal"
-        android:paddingStart="4dp"
+        android:paddingStart="2dp"
         android:paddingTop="6dp"
-        android:paddingEnd="4dp"
+        android:paddingEnd="2dp"
         android:paddingBottom="6dp" />
 </LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Renk Teması: boya paleti -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp" android:height="40dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="?attr/colAccent"
+        android:pathData="M12,2 C6.5,2 2,6 2,11.2 C2,16.4 6.3,20.6 11.6,20.6 C13,20.6 13.6,19.7 13.6,18.8 C13.6,17.6 12.6,17.2 12.6,16 C12.6,14.9 13.5,14.2 14.6,14.2 L16.6,14.2 C19.6,14.2 22,12.2 22,9.6 C22,5.4 17.5,2 12,2 Z" />
+    <path android:fillColor="#E53935"
+        android:pathData="M7,9.2 A1.6,1.6 0 1,1 7,12.4 A1.6,1.6 0 1,1 7,9.2 Z" />
+    <path android:fillColor="#43A047"
+        android:pathData="M9.6,4.8 A1.6,1.6 0 1,1 9.6,8 A1.6,1.6 0 1,1 9.6,4.8 Z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M14.6,4.8 A1.6,1.6 0 1,1 14.6,8 A1.6,1.6 0 1,1 14.6,4.8 Z" />
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M17.8,8.4 A1.6,1.6 0 1,1 17.8,11.6 A1.6,1.6 0 1,1 17.8,8.4 Z" />
+</vector>

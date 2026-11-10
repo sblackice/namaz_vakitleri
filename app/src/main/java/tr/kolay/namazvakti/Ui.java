@@ -1,5 +1,6 @@
 package tr.kolay.namazvakti;
 
+import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,26 @@ import android.widget.TextView;
 /** Ekran yardımcıları. */
 final class Ui {
     private Ui() {}
+
+    /** Seçili renk temasındaki bir rengi okur (ör. R.attr.colAccent). */
+    static int color(Context c, int attr) {
+        TypedValue tv = new TypedValue();
+        if (!c.getTheme().resolveAttribute(attr, tv, true)) return 0xFF000000;
+        if (tv.type >= TypedValue.TYPE_FIRST_COLOR_INT && tv.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+            return tv.data;
+        }
+        return c.getColor(tv.resourceId);
+    }
+
+    /** Açık/kapalı düğme: açıkken tema rengi, kapalıyken gri (yazı rengi zemine göre). */
+    static void onOff(TextView b, boolean on) {
+        b.setBackgroundResource(on ? R.drawable.button : R.drawable.button_off);
+        b.setTextColor(on ? color(b.getContext(), R.attr.colOnAccent) : 0xFFFFFFFF);
+    }
+
+    static int dp(Context c, float v) {
+        return Math.round(v * c.getResources().getDisplayMetrics().density);
+    }
 
     /** Bütün yazıları kullanıcının seçtiği oranda büyütür. */
     static void scaleText(View v, float scale) {

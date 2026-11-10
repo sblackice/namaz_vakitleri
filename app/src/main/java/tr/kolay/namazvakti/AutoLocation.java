@@ -26,7 +26,9 @@ final class AutoLocation {
 
     /** Bu kadar yer değiştirmeden vakitler yeniden hesaplanmaz (vakit farkı 1 dakikanın altında kalır). */
     static final double MOVE_KM = 5.0;
-    /** İl merkezine bu kadar yakınsa o ilin adı gösterilir; değilse "Konumum" yazar. */
+    /** İlçe merkezine bu kadar yakınsa ilçenin adı gösterilir. */
+    static final double ILCE_KM = 30.0;
+    /** İlçe bulunamazsa: il merkezine bu kadar yakınsa ilin adı; değilse "Konumum" yazar. */
     static final double NAME_KM = 100.0;
     /** Bu kadar yeni bir "son bilinen konum" varsa yeniden aranmaz. */
     static final long FRESH_MS = 15 * 60 * 1000L;
@@ -98,11 +100,23 @@ final class AutoLocation {
         return best;
     }
 
-    /** Gösterilecek yer adı: en yakın il merkezi (Türkiye saat dilimindeyse ve yeterince yakınsa). */
+    /**
+     * Gösterilecek yer adı: en yakın ilçe ("Çankaya, Ankara"), o da uzaksa en yakın il merkezi.
+     * Telefon Türkiye saat diliminde değilse veya hiçbiri yakın değilse "Konumum" yazar.
+     */
     static String placeName(double lat, double lon, String tzId) {
+        if (!turkeyTime(tzId)) return OWN_PLACE;
         double[] dist = new double[1];
+        int k = CityActivity.nearestIlce(lat, lon, dist);
+        if (k >= 0 && dist[0] <= ILCE_KM) {
+            String il = Cities.NAMES[Ilceler.IL[k]];
+            String ilce = Ilceler.AD[k];
+            boolean merkez = ilce.equals("Merkez") || Ilceler.LAT[k] == Cities.LAT[Ilceler.IL[k]]
+                    && Ilceler.LON[k] == Cities.LON[Ilceler.IL[k]];
+            return merkez ? il : ilce + ", " + il;
+        }
         int i = Cities.nearest(lat, lon, dist);
-        return turkeyTime(tzId) && dist[0] <= NAME_KM ? Cities.NAMES[i] : OWN_PLACE;
+        return dist[0] <= NAME_KM ? Cities.NAMES[i] : OWN_PLACE;
     }
 
     /** Telefon Türkiye saat diliminde mi? (Aynı dilimin eski adları da kabul edilir.) */

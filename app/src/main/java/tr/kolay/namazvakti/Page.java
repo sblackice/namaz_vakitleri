@@ -25,5 +25,11 @@ abstract class Page {
 
     void onActivityResult(int requestCode, int resultCode, Intent data) {}
 
+    /** Bir izin penceresi kapandığında (sayfa ekrandayken). */
+    void onPermissionResult(int requestCode) { onShow(); }
+
+    /** Pencere kapanırken (ör. seslendirme motorunu kapatmak için). */
+    void onDestroy() {}
+
     float scale() { return Prefs.textScale(activity); }
 }

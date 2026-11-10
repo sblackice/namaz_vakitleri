@@ -41,11 +41,6 @@ final class Prefs {
         sp(c).edit().putBoolean("autoLoc", on).apply();
     }
 
-    /** Görünüm: true = Koyu Yeşil (varsayılan), false = Açık. */
-    static boolean darkTheme(Context c) { return sp(c).getBoolean("dark", true); }
-
-    static void setDarkTheme(Context c, boolean on) { sp(c).edit().putBoolean("dark", on).apply(); }
-
     /** Bu vakit girince ezan/bildirim olsun mu? Güneş bir namaz vakti değildir, varsayılanı kapalı. */
     static boolean adhanOn(Context c, int i) {
         return sp(c).getBoolean("adhan" + i, i != PrayerCalc.GUNES);
@@ -55,17 +50,34 @@ final class Prefs {
         sp(c).edit().putBoolean("adhan" + i, on).apply();
     }
 
-    /** Kullanıcının seçtiği ezan ses dosyası (yoksa null: telefonun bildirim sesi çalar). */
-    static String adhanUri(Context c) { return sp(c).getString("adhanUri", null); }
+    /**
+     * Çalınacak ezan sesi. Hiç seçim yapılmadıysa uygulamanın içindeki ilk hazır ezan.
+     * null: kullanıcı "telefonun bildirim sesi" seçmiş (veya hazır ezan yok).
+     */
+    static String adhanUri(Context c) {
+        if (!sp(c).contains("adhanUri")) {
+            java.util.List<Ezanlar.Ezan> h = Ezanlar.mevcut(c);
+            return h.isEmpty() ? null : h.get(0).uri(c);
+        }
+        String v = sp(c).getString("adhanUri", "");
+        return v.length() == 0 ? null : v;
+    }
 
-    static String adhanName(Context c) { return sp(c).getString("adhanName", ""); }
+    static String adhanName(Context c) {
+        if (!sp(c).contains("adhanUri")) {
+            java.util.List<Ezanlar.Ezan> h = Ezanlar.mevcut(c);
+            return h.isEmpty() ? "" : h.get(0).ad;
+        }
+        return sp(c).getString("adhanName", "");
+    }
 
     static void setAdhanSound(Context c, String uri, String name) {
         sp(c).edit().putString("adhanUri", uri).putString("adhanName", name).apply();
     }
 
+    /** Ezan yerine telefonun bildirim sesi çalsın. */
     static void clearAdhanSound(Context c) {
-        sp(c).edit().remove("adhanUri").remove("adhanName").apply();
+        sp(c).edit().putString("adhanUri", "").remove("adhanName").apply();
     }
 
     /** Telefon sessiz veya titreşimdeyken ezan sesi çalınmasın mı? */
@@ -91,6 +103,26 @@ final class Prefs {
 
     static void setOffset(Context c, int i, int min) {
         sp(c).edit().putInt("off" + i, Math.max(-30, Math.min(30, min))).apply();
+    }
+
+    /** Renk teması (Tema.ADLAR sırası). */
+    static int theme(Context c) { return sp(c).getInt("tema", Tema.VARSAYILAN); }
+
+    static void setTheme(Context c, int i) { sp(c).edit().putInt("tema", i).apply(); }
+
+    // ---- Zikirmatik ----
+    static final int[] ZIKIR_HEDEFLERI = {33, 99, 100, 500, 1000};
+
+    static int zikirCount(Context c) { return sp(c).getInt("zikir", 0); }
+
+    static void setZikirCount(Context c, int n) {
+        sp(c).edit().putInt("zikir", Math.max(0, Math.min(999999, n))).apply();
+    }
+
+    static int zikirTarget(Context c) { return sp(c).getInt("zikirHedef", 33); }
+
+    static void setZikirTarget(Context c, int n) {
+        sp(c).edit().putInt("zikirHedef", Math.max(1, Math.min(99999, n))).apply();
     }
 
     static boolean askedFirstRun(Context c) { return sp(c).getBoolean("firstRun", false); }

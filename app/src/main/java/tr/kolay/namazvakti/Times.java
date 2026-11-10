@@ -68,8 +68,17 @@ final class Times {
         return f.format(new Date(now));
     }
 
-    /** Hicri tarih (Ümmü'l-Kurâ takvimi; Diyanet takviminden 1 gün farklı olabilir). */
+    /**
+     * Hicri tarih. Diyanet takvimine göredir (HicriTablo: Diyanet'in yayımladığı ay başları ve
+     * Diyanet ölçütüyle hesaplanan aylar). Tablonun dışındaki yıllarda Ümmü'l-Kurâ takvimi
+     * kullanılır ve "yaklaşık" yazılır.
+     */
     static String hijriLine(Context c, long now) {
+        Calendar cal = Calendar.getInstance(tz(c));
+        cal.setTimeInMillis(now);
+        int[] h = hijriDiyanet(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1,
+                cal.get(Calendar.DAY_OF_MONTH));
+        if (h != null) return h[2] + " " + HIJRI_MONTHS[h[1] - 1] + " " + h[0] + " (Hicri)";
         try {
             IslamicCalendar ic = new IslamicCalendar(
                     android.icu.util.TimeZone.getTimeZone(Prefs.tzId(c)));
@@ -77,10 +86,33 @@ final class Times {
             ic.setTimeInMillis(now);
             return ic.get(IslamicCalendar.DAY_OF_MONTH) + " "
                     + HIJRI_MONTHS[ic.get(IslamicCalendar.MONTH)] + " "
-                    + ic.get(IslamicCalendar.YEAR) + " (Hicri)";
+                    + ic.get(IslamicCalendar.YEAR) + " (Hicri, yaklaşık)";
         } catch (Throwable e) {
             return "";
         }
+    }
+
+    /** Miladi tarihin Diyanet takvimine göre Hicri karşılığı: {yıl, ay (1-12), gün}; tablo dışıysa null. */
+    static int[] hijriDiyanet(int y, int m, int d) {
+        long day = epochDay(y, m, d);
+        int[][] t = HicriTablo.AY_BASLARI;
+        for (int i = t.length - 2; i >= 0; i--) {
+            long start = epochDay(t[i][2], t[i][3], t[i][4]);
+            if (start <= day) {
+                long next = epochDay(t[i + 1][2], t[i + 1][3], t[i + 1][4]);
+                if (day >= next) return null; // tablonun son ayından sonrası
+                return new int[] {t[i][0], t[i][1], (int) (day - start) + 1};
+            }
+        }
+        return null;
+    }
+
+    /** 1 Ocak 1970'ten bu yana geçen gün sayısı (saat diliminden bağımsız takvim günü). */
+    static long epochDay(int y, int m, int d) {
+        Calendar u = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        u.clear();
+        u.set(y, m - 1, d);
+        return u.getTimeInMillis() / 86400000L;
     }
 
     static String upper(String s) { return s.toUpperCase(TR); }

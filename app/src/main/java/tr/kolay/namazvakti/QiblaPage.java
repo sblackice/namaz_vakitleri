@@ -152,7 +152,7 @@ final class QiblaPage extends Page implements SensorEventListener {
         if (accuracy <= SensorManager.SENSOR_STATUS_ACCURACY_LOW) {
             String warn = "Pusula ayarsız olabilir: telefonu havada 8 çizer gibi birkaç kez sallayın.";
             SpannableString w = new SpannableString(line + "\n" + warn);
-            w.setSpan(new ForegroundColorSpan(activity.getColor(R.color.warn)), line.length() + 1,
+            w.setSpan(new ForegroundColorSpan(Ui.color(activity, R.attr.colWarn)), line.length() + 1,
                     w.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             headingText.setText(w);
         } else {
@@ -161,13 +161,13 @@ final class QiblaPage extends Page implements SensorEventListener {
         boolean ok = qiblaView.aligned();
         if (ok) {
             SpannableString s = new SpannableString("✓ Kıble yönündesiniz.");
-            s.setSpan(new ForegroundColorSpan(activity.getColor(R.color.accent_text)), 0, 1,
+            s.setSpan(new ForegroundColorSpan(Ui.color(activity, R.attr.colAccentText)), 0, 1,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             stateText.setText(s);
-            stateText.setTextColor(activity.getColor(R.color.text_main));
+            stateText.setTextColor(Ui.color(activity, R.attr.colText));
         } else {
             stateText.setText(turnHint(qiblaView.arrowAngle()));
-            stateText.setTextColor(activity.getColor(R.color.text_main));
+            stateText.setTextColor(Ui.color(activity, R.attr.colText));
         }
     }
 

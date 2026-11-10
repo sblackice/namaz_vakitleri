@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Zikirmatik: ortada büyük düğme ve kadran; sağ üstte hedef; sol altta − / +; sağ altta Sıfırla. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_header" />
+
+    <FrameLayout
+        android:id="@+id/zikir_root"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/zikir_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_marginEnd="150dp"
+            android:text="@string/zikir_intro"
+            android:textColor="?attr/colText"
+            android:textSize="17sp" />
+
+        <!-- Sağ üst: hedeflenen zikir sayısı (dokununca değiştirilir) -->
+        <LinearLayout
+            android:id="@+id/zikir_target_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:background="@drawable/card_outline"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:minWidth="128dp"
+            android:minHeight="72dp"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zikir_target"
+                android:textColor="?attr/colAccentText"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/zikir_target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textColor="?attr/colText"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="değiştir ✎"
+                android:textColor="?attr/colTextPast"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <tr.kolay.namazvakti.ZikirView
+            android:id="@+id/zikir_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="76dp"
+            android:layout_marginBottom="84dp" />
+
+        <!-- Sol alt: bir eksilt / bir artır -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/zikir_minus"
+                style="@style/BigButton"
+                android:layout_width="72dp"
+                android:minHeight="72dp"
+                android:contentDescription="Bir eksilt"
+                android:text="−"
+                android:textSize="34sp" />
+
+            <Button
+                android:id="@+id/zikir_plus"
+                style="@style/BigButton"
+                android:layout_width="72dp"
+                android:layout_marginStart="10dp"
+                android:minHeight="72dp"
+                android:contentDescription="Bir artır"
+                android:text="+"
+                android:textSize="34sp" />
+        </LinearLayout>
+
+        <!-- Sağ alt: sıfırla -->
+        <Button
+            android:id="@+id/zikir_reset"
+            style="@style/OffButton"
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:minWidth="130dp"
+            android:minHeight="72dp"
+            android:text="@string/zikir_reset" />
+    </FrameLayout>
+</LinearLayout>

@@ -42,6 +42,7 @@ public class OtherScreensTest {
     public void setUp() {
         app = RuntimeEnvironment.getApplication();
         TestUtil.setCity(app, "Ankara");
+        Prefs.clearAdhanSound(app); // eski davranış: bildirim sesi
         Clock.fixedNow = TestUtil.istanbul(2026, 10, 15, 12, 0);
     }
 
@@ -251,28 +252,5 @@ public class OtherScreensTest {
                 + " | " + line2);
         assertTrue(next, next.startsWith("Sıradaki: ÖĞLE"));
         assertTrue(line2, line2.contains("Yatsı"));
-    }
-
-    @Test
-    public void gorunumDegisirKoyuYesilVeAcik() throws Exception {
-        TestUtil.setCity(app, "Ankara");
-        assertTrue("varsayılan görünüm koyu yeşil olmalı", Prefs.darkTheme(app));
-        MainActivity dark = Robolectric.buildActivity(MainActivity.class).setup().get();
-        int darkBg = dark.getColor(R.color.bg);
-        assertEquals(0xFF0A2619, darkBg);
-
-        SettingsActivity s = Robolectric.buildActivity(SettingsActivity.class).setup().get();
-        android.widget.Button b = (android.widget.Button) s.findViewById(R.id.btn_theme);
-        assertEquals("Görünüm: Koyu Yeşil", b.getText().toString());
-        b.performClick();
-        assertTrue(!Prefs.darkTheme(app));
-
-        MainActivity light = Robolectric.buildActivity(MainActivity.class).setup().get();
-        assertEquals(0xFFFBFAF4, light.getColor(R.color.bg));
-        TestUtil.screenshot(light, "11-acik-gorunum-ana-ekran");
-        light.findViewById(R.id.tab_adhan).performClick();
-        TestUtil.screenshot(light, "11b-acik-gorunum-ezan");
-        SettingsActivity s2 = Robolectric.buildActivity(SettingsActivity.class).setup().get();
-        assertEquals("Görünüm: Açık", ((android.widget.Button) s2.findViewById(R.id.btn_theme)).getText().toString());
     }
 }

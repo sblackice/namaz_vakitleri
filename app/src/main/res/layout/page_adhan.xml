@@ -41,6 +41,13 @@
             style="@style/Body"
             android:textSize="20sp" />
 
+        <!-- Uygulamanın içindeki hazır ezan sesleri (Ezanlar.java); yoksa boş kalır -->
+        <LinearLayout
+            android:id="@+id/builtin_sounds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
         <Button
             android:id="@+id/btn_pick_sound"
             style="@style/BigButton"

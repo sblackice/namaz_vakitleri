@@ -4,6 +4,7 @@
     <string name="welcome">Hoş geldiniz</string>
     <string name="welcome_body">Namaz vakitlerini göstermek için önce şehrinizi seçin.</string>
     <string name="choose_place">Şehrimi Seç</string>
+    <string name="change_city">Değiştir</string>
     <string name="btn_back">Geri</string>
     <string name="btn_back_arrow">‹ Geri</string>
     <string name="accuracy_note">Vakitler internet olmadan telefonunuzda hesaplanır. Diyanet takviminden küçük farklar olabilir; gerekirse Ezan sekmesindeki “Diğer Ayarlar” bölümünden dakika düzeltmesi yapabilirsiniz.</string>
@@ -14,8 +15,35 @@
     <string name="tab_days">Dini Günler</string>
     <string name="tab_qibla">Kıble</string>
     <string name="tab_duas">Dualar</string>
+    <string name="tab_menu">Menü</string>
+
+    <!-- Menü paneli -->
+    <string name="menu_close">Menüyü kapat</string>
+    <string name="menu_cami">En Yakın Cami</string>
+    <string name="menu_esma">Esmâ-ül Hüsnâ</string>
+    <string name="menu_zikir">Zikirmatik</string>
+    <string name="menu_tema">Renk Teması</string>
+
+    <!-- Renk Teması -->
+    <string name="tema_intro">Uygulamanın renklerini seçin. Dokunduğunuz tema hemen uygulanır.</string>
+
+    <!-- Zikirmatik -->
+    <string name="zikir_intro">Ortadaki büyük düğmeye her dokunuşta sayı bir artar.</string>
+    <string name="zikir_reset">↺ Sıfırla</string>
+    <string name="zikir_target">Hedef</string>
+
+    <!-- Esmâ-ül Hüsnâ -->
+    <string name="esma_intro">Allah\'ın 99 güzel ismi. Bir isme dokununca anlamı açılır ve Arapça okunuşu seslendirilir. Sağ alttaki ▶ düğmesi 99 ismi sırayla okur; “Tesbih” Zikirmatik\'i açar.</string>
+    <string name="esma_play_all">▶ Hepsini Sırayla Dinle</string>
+    <string name="esma_stop">■ Durdur</string>
+    <string name="esma_note">İsimlerin sırası ve Arapça yazılışı Tirmizî\'nin Sünen\'indeki hadise (Daavât, 3507) göredir. Türkçe anlamlar kısa açıklamalardır; ayrıntı için TDV İslâm Ansiklopedisi\'nin “Esmâ-i Hüsnâ” maddesine bakabilirsiniz. Arapça yazı tipi: Aref Ruqaa (SIL Open Font License). Seslendirme, telefonunuzun Arapça konuşma (metin okuma) motoruyla yapılır; telaffuz telefona göre değişebilir.</string>
+
+    <!-- En Yakın Cami -->
+    <string name="cami_intro">Haritada yakınınızdaki camiler görünür. Bir camiye dokunun, sonra “Yol Tarifi” ile Google Haritalar\'da yolu görün.</string>
+    <string name="cami_note">Cami bilgileri OpenStreetMap gönüllülerinin girdiği verilerdir (© OpenStreetMap katkıda bulunanlar, ODbL); bazı camiler eksik olabilir. Bu sayfa internet kullanır: yaklaşık konumunuz, harita ve cami listesi için OpenStreetMap sunucularına gönderilir. Yol tarifi Google Haritalar\'da açılır.</string>
 
     <!-- Ana Sayfa -->
+    <string name="countdown_units">saat : dakika : saniye</string>
     <string name="scroll_hint">▼ Günün Hadisi için aşağı kaydırın</string>
     <string name="hadith_title">Günün Hadisi</string>
     <string name="hadith_note">Hadis her gün yenilenir. Yalnızca Buhârî ve Müslim\'in Sahîh\'lerinden alınmıştır; numaralar Fuad Abdülbâkî numaralandırmasına göredir.</string>
@@ -28,7 +56,7 @@
     <string name="test_sound">▶ Ezanı Dene</string>
     <string name="stop_sound">■ Durdur</string>
     <string name="default_sound">Telefonun Bildirim Sesini Kullan</string>
-    <string name="sound_note">Ezan kaydı telif hakları nedeniyle uygulamaya eklenmedi. Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa “Ezan Ses Dosyası Seç” ile seçebilirsiniz. Seçilen ezan, telefonun ALARM ses seviyesinde çalar; bildirimdeki “Durdur” ile susturulur.</string>
+    <string name="sound_note">Uygulamada 3 hazır ezan sesi vardır; ilk kurulumda Ezan 1 seçilidir. İsterseniz telefonunuzdaki bir ezan dosyasını (ör. MP3) da seçebilirsiniz. Ezan, telefonun ALARM ses seviyesinde çalar; bildirimdeki “Durdur” ile susturulur.</string>
     <string name="remind_title">Vakitten önce hatırlatma</string>
     <string name="perm_title">İzinler</string>
     <string name="perm_intro">Ezanın zamanında okunması için aşağıdakilerin hepsinde ✔ işareti olmalı. Kırmızı olanın altındaki düğmeye dokunun.</string>
@@ -54,7 +82,7 @@
     <!-- Şehir ve ayarlar -->
     <string name="city_title">Şehrinizi seçin</string>
     <string name="find_me">Konumumu Otomatik Bul ve Takip Et</string>
-    <string name="search_hint">Şehir adı yazın…</string>
+    <string name="search_hint">İl veya ilçe adı yazın…</string>
     <string name="settings_title">Diğer Ayarlar</string>
     <string name="offsets_title">Vakit düzeltme (dakika)</string>
     <string name="offsets_body">Vakitler bulunduğunuz yerin takviminden farklıysa her vakit için dakika ekleyip çıkarabilirsiniz.</string>

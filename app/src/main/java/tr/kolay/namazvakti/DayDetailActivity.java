@@ -1,7 +1,6 @@
 package tr.kolay.namazvakti;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -13,13 +12,8 @@ public class DayDetailActivity extends Activity {
     static final String EXTRA_INDEX = "index";
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        applyOverrideConfiguration(Gorunum.config(base));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Tema.uygula(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_day);
         int idx = getIntent().getIntExtra(EXTRA_INDEX, -1);
