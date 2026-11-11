@@ -41,6 +41,8 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
     /** Metin okuma motorunun ses tonu: 1.0 normal; daha küçük değer daha kalın (erkek sesine yakın). */
     static final float ERKEK_TON = 0.72f;
     private static Typeface hat;
+    /** Yalnızca testler için: false yapılırsa kayıtlar yokmuş gibi telefonun okuma sesi kullanılır. */
+    static boolean useRecordings = true;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final View[] cards = new View[Esma.LISTE.length];
@@ -199,7 +201,8 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
 
     @Override
     void onShow() {
-        startEngine();
+        // Gömülü erkek sesi kayıtları varsa telefonun konuşma motoruna gerek yoktur.
+        if (recording(0) == 0) startEngine();
         updateControls();
     }
 
@@ -306,6 +309,7 @@ final class EsmaPage extends Page implements TextToSpeech.OnInitListener {
 
     /** Bu ismin uygulamaya gömülü ses kaydı (res/raw/esma_NN); yoksa 0. */
     int recording(int idx) {
+        if (!useRecordings) return 0;
         return activity.getResources().getIdentifier(
                 String.format(Locale.US, "esma_%02d", idx + 1), "raw", activity.getPackageName());
     }

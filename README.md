@@ -9,6 +9,16 @@ Reklam ve takip yoktur. İnternet yalnızca **Menü → En Yakın Cami** sayfas�
 <img src="docs/ekran-goruntuleri/11-menu.png" width="200"> <img src="docs/ekran-goruntuleri/12-zikirmatik.png" width="200"> <img src="docs/ekran-goruntuleri/13-esmaul-husna.png" width="200"> <img src="docs/ekran-goruntuleri/13b-esmaul-husna-detay.png" width="200"> <img src="docs/ekran-goruntuleri/16-en-yakin-cami.png" width="200">
 <img src="docs/ekran-goruntuleri/14-renk-temasi.png" width="200"> <img src="docs/ekran-goruntuleri/15a-tema-beyaz-kirmizi.png" width="200"> <img src="docs/ekran-goruntuleri/15b-tema-pudra-yesil.png" width="200"> <img src="docs/ekran-goruntuleri/15d-tema-siyah-beyaz.png" width="200"> <img src="docs/ekran-goruntuleri/15e-tema-siyah-kirmizi.png" width="200">
 
+## 2.5 sürümünde neler değişti?
+
+- **Esmâ-ül Hüsnâ artık erkek sesiyle, hazır kayıttan okunuyor.** 99 ismin her biri için ayrı ses kaydı uygulamaya gömüldü
+  (`res/raw/esma_01.mp3` … `esma_99.mp3`, toplam yaklaşık 1,2 MB). Telefonda Arapça ses paketi gerekmez; her telefonda aynı ses çıkar.
+  - Kayıtlar **yapay zekâ sesidir**: ElevenLabs (`eleven_v3` modeli, "Ashraf - Calm Documentary Narrator" sesi) ile, Arapça
+    harekeli metinden üretildi; `tools/esma_ses_bol.py` ile 99 parçaya bölündü. Bir insan okuyucunun kaydı değildir.
+  - Telaffuz **dinlenerek doğrulanmadı** (bu ortamda ses dinlenemiyor). Yalnızca şunlar otomatik kontrol edildi: her 11 isimlik
+    grup tam 11 parçaya bölündü, 99 dosyanın hepsi geçerli MP3. Tamamını dinlemek için: `docs/ses/esmaul-husna-erkek-sesi-99-isim.mp3`.
+  - Bir kayıt açılamazsa telefonun metin okuma sesi (kalın tonda) yedek olarak kullanılır.
+
 ## 2.4 sürümünde neler değişti?
 
 Bu sürüm, 2.3 (ilçeler, hazır ezan sesleri, Menü) ile ayrı bir dalda geliştirilen otomatik konum / koyu yeşil / 3B simge
@@ -101,7 +111,7 @@ Bu sürüm, 2.3 (ilçeler, hazır ezan sesleri, Menü) ile ayrı bir dalda geli�
 4. **Yükle**'ye basın. Google Play Protect uyarı verirse **"Yine de yükle"** deyin (uygulama Google Play'den gelmediği için bu uyarı normaldir).
 5. Uygulamayı açın, şehrinizi seçin. Bildirim izni sorulursa **İzin ver** deyin.
 
-> **2.4 hangi sürümün üzerine kurulur?** 2.4, 2.0 ve 2.1 ile **aynı** anahtarla imzalandı; onların üzerine doğrudan kurulur.
+> **2.4 / 2.5 hangi sürümün üzerine kurulur?** 2.4 ve 2.5; 2.0 ve 2.1 ile **aynı** anahtarla imzalandı; onların üzerine doğrudan kurulur.
 > 2.2 ve 2.3 ise başka bir oturumda **farklı bir anahtarla** imzalanmıştı (o anahtar depoda yok). Telefonda 2.2 veya 2.3
 > kuruluysa önce kaldırmanız gerekir (uygulama simgesine basılı tutun → **Kaldır**); şehir ve ayarlar yeniden seçilir.
 >
@@ -116,7 +126,7 @@ Bu sürüm, 2.3 (ilçeler, hazır ezan sesleri, Menü) ile ayrı bir dalda geli�
 **Gereken:** Android 7.0 veya daha yeni bir telefon.
 
 APK dosyasının SHA-256 özeti (dosyanın bozulmadığını kontrol etmek isteyenler için):
-`a4eaa7c4d37ec7a1977493bb8ca9b557c12d72bb28145ddc12a735a670f297aa`
+`3480f7ca5b7df69192ce8527945a9e69fcf3246ab95dd38d9acd85050b1877e1`
 
 ## Neler var?
 
@@ -199,7 +209,7 @@ Telefonunuzda bir ezan ses dosyası (ör. MP3) varsa:
 #   https://repo1.maven.org/maven2/org/robolectric/android-all/14-robolectric-10818077/
 ANDROID_JAR=/yol/android-all-14-robolectric-10818077.jar ./build.sh     # → build/KolayNamazVakti.apk
 
-# Otomatik testler (telefon gerekmez, Robolectric ile; 89 test, ekran görüntülerini de üretir):
+# Otomatik testler (telefon gerekmez, Robolectric ile; 90 test, ekran görüntülerini de üretir):
 ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
 # Esmâ-ül Hüsnâ yazı tipi: npm @expo-google-fonts/aref-ruqaa 0.4.1 → assets/fonts (SIL OFL 1.1)
 ```
@@ -211,6 +221,7 @@ ANDROID_JAR=... AXT_SHIM_JAR=... ./test.sh
   - Hicri takvim: `HicriTablo.java` (otomatik üretilir), `Times.hijriDiyanet`.
   - İçerik: `Hadisler.java`, `Dualar.java`, `KuranMetni.java` (otomatik üretilir), `DiniGunler.java`.
   - Ezan: `AlarmScheduler` (kesin alarm) → `AlarmReceiver` → `AdhanService` (ön plan medya servisi) veya `Notifier`.
+- `tools/esma_ses_bol.py` — Esmâ-ül Hüsnâ grup kayıtlarını 99 ayrı ses dosyasına böler (ffmpeg gerekir).
 - `tools/menu_simgeleri_uret.py` — alt menünün 3 boyutlu görünümlü simgelerini kodla çizer (Python + Pillow + numpy).
 - `tools/robotest` — otomatik testler; ekran görüntülerini `docs/ekran-goruntuleri` içine yazar.
 - `tools/hadis_dogrula.py` — Günün Hadisi listesini hadis veritabanıyla karşılaştırır (Ekim 2026'da yeniden çalıştırıldı: 54/54, 0 hata).

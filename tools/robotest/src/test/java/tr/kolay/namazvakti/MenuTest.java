@@ -50,7 +50,10 @@ public class MenuTest {
     }
 
     @After
-    public void tearDown() { Clock.fixedNow = 0; }
+    public void tearDown() {
+        Clock.fixedNow = 0;
+        EsmaPage.useRecordings = true;
+    }
 
     private MainActivity start() {
         return Robolectric.buildActivity(MainActivity.class).setup().get();
@@ -190,6 +193,7 @@ public class MenuTest {
 
     @Test
     public void esmaulHusna99IsimVeArapcaSeslendirme() throws Exception {
+        EsmaPage.useRecordings = false; // kayıt yokken: telefonun okuma sesi
         ShadowTextToSpeech.addLanguageAvailability(new Locale("ar"));
         MainActivity a = openPage(R.id.menu_esma, MainActivity.ESMA);
         EsmaPage page = (EsmaPage) a.page(MainActivity.ESMA);
@@ -257,6 +261,7 @@ public class MenuTest {
 
     @Test
     public void esmaArapcaSesPaketiYoksaYuklemeDugmesiCikar() {
+        EsmaPage.useRecordings = false; // kayıt yokken: telefonun okuma sesi
         MainActivity a = openPage(R.id.menu_esma, MainActivity.ESMA);
         EsmaPage page = (EsmaPage) a.page(MainActivity.ESMA);
         initTts(TextToSpeech.SUCCESS);
@@ -298,7 +303,30 @@ public class MenuTest {
         // Kayıtlar eklenince (res/raw/esma_01 … esma_99) 99'u da bulunmalı; şu an hiç yok ya da hepsi var.
         int found = 0;
         for (int i = 0; i < Esma.LISTE.length; i++) if (page.recording(i) != 0) found++;
-        assertTrue("kayıtlar eksik: " + found, found == 0 || found == Esma.LISTE.length);
+        assertEquals("99 ismin hepsinin erkek sesi kaydı olmalı", Esma.LISTE.length, found);
+    }
+
+    /** Kayıtlar varken telefonun konuşma motoru başlatılmaz; 99 kaydın her biri geçerli bir MP3'tür. */
+    @Test
+    public void esmaKayitlariVarkenTelefonSesiKullanilmaz() throws Exception {
+        MainActivity a = openPage(R.id.menu_esma, MainActivity.ESMA);
+        EsmaPage page = (EsmaPage) a.page(MainActivity.ESMA);
+        assertEquals("konuşma motoru hiç başlatılmamalı", EsmaPage.TTS_NONE, page.ttsState());
+        assertEquals(View.GONE, a.findViewById(R.id.esma_fix_voice).getVisibility());
+        for (int i = 0; i < Esma.LISTE.length; i++) {
+            int res = page.recording(i);
+            assertTrue((i + 1) + ". ismin kaydı yok", res != 0);
+            java.io.InputStream in = a.getResources().openRawResource(res);
+            byte[] head = new byte[3];
+            int n = in.read(head);
+            int size = 3 + in.available();
+            in.close();
+            assertEquals(3, n);
+            boolean mp3 = (head[0] == 'I' && head[1] == 'D' && head[2] == '3')
+                    || ((head[0] & 0xFF) == 0xFF && (head[1] & 0xE0) == 0xE0);
+            assertTrue((i + 1) + ". kayıt MP3 değil", mp3);
+            assertTrue((i + 1) + ". kayıt çok küçük: " + size, size > 4000);
+        }
     }
 
     // ---- Renk Teması ----
